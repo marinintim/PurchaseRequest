@@ -23,17 +23,53 @@
 
         <div class="main-container">
             <div class="main">
-                <div class="">
-                    
+                <div class="pr-form">
+                        <div class="pr-creditcard"></div>
+                        <script type="text/template" id="pr-creditcard">
+                            <select class="pr-creditcard-select">
+                                <option value="">---</option>
+                                <option value="0">-- Add new credit card --</option>
+                            </select>
+                        </script>
 
-                        <script type="text/template" id="">
-                               
-                        </script>       
+                        <script type="text/tempalate" id="pr-creditcard-form">
+                            <label for="pr-creditcard-form-cardholder">Card Holder</label>
+                            <input id="pr-creditcard-form-cardholder" type="text">
+                            
+                            <label for="pr-creditcard-form-number">Card number</label>
+                            <input type="text" id="pr-creditcard-form-number">
+                            
+                            <label for="pr-creditcard-form-expire">Expire month / year</label>
+                            <input type="text" id="pr-creditcard-form-expire">
+                            <input type="text" id="pr-creditcard-form-expire-year">
+                        </script>
+
+                        <script type="text/template" id="pr-address">
+                               <select>
+                                    <option value="new">-- Add new address --</option>
+                                    <option value="same">-- Same as shipping address -- </option>
+                               </select>
+                        </script>
+
+                       <script type="text-template" id="pr-address-form">
+                                   <input type="text" placeholder="address">
+                                   <input type="text" placeholder="address 2">
+                                   <select name="" id="">
+                                        <option>there will be countries</option>
+                                   </select>
+                                   <select name="" id="">
+                                   <option value="">there will be regions</option></select>
+                                   <input type="text" placeholder="locality">
+                        </script>     
                  
                 </div><!--
-             --><aside>
-                    <h3>Summary</h3>
-                    <p>there will be summary, yeah</p>
+             --><aside class="pr-summary">
+                    <script type="text/template" id="pr-summary">
+                        <h3>Summary</h3>
+                        <p>{{creditcard}}</p>
+                        <p>{{shippingaddress}}
+                        <p>{{billingaddress}}
+                    </script>
                 </aside>
             </div>
 
@@ -43,7 +79,7 @@
 
         <div class="footer-container">
             <footer>
-                <p class="debug">there will be</p>
+                <p class="debug">there will be debug info</p>
                 <h3><abbr title="made by me">mbm</abbr></h3>
             </footer>
         </div>
@@ -59,6 +95,6 @@
         <!-- plugins -->
         <script src="js/vendor/backbone.localStorage-min.js"></script>
         <!-- my code -->
-        <script src="js/main.js"></script>
+        <script data-main="js/main" src="js/vendor/require.js"></script>
     </body>
 </html>

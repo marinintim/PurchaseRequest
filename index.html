@@ -27,12 +27,19 @@
                         <div class="pr-creditcard"></div>
                         <script type="text/template" id="pr-creditcard">
                             <select class="pr-creditcard-select">
-                                <option value="">---</option>
-                                <option value="0">-- Add new credit card --</option>
+                                {{#if cards}}
+                                    {{#each cards}}
+                                        <option value="{{id}}">{{number}} &mdash; {{card_holder}} ({{expiration_month}}/{{expiration_year}})</option>
+                                    {{/each}}
+                                {{/if}}
+                                {{#else}}
+                                    <option value=""></option>
+                                {{/else}}
+                                <option value="new">-- Add new credit card --</option>
                             </select>
                         </script>
 
-                        <script type="text/tempalate" id="pr-creditcard-form">
+                        <script type="text/template" id="pr-creditcard-form">
                             <label for="pr-creditcard-form-cardholder">Card Holder</label>
                             <input id="pr-creditcard-form-cardholder" type="text">
                             
@@ -43,24 +50,35 @@
                             <input type="text" id="pr-creditcard-form-expire">
                             <input type="text" id="pr-creditcard-form-expire-year">
                         </script>
-
+                        <div class="pr-address-shipping"></div>
+                        <div class="pr-address-billing"></div>
                         <script type="text/template" id="pr-address">
-                               <select>
+                               <select class="pr-address-select">
+                                    {{#each addresses}}
+                                        <option value="{{id}}">{{country}}, {{region}}, {{address}}, {{address2}}, {{locality}}</option>
+                                    {{/each}}
+                                    <option value="def1"> WHERE IS MY CONTENT </option>
                                     <option value="new">-- Add new address --</option>
                                     <option value="same">-- Same as shipping address -- </option>
                                </select>
                         </script>
 
-                       <script type="text-template" id="pr-address-form">
+                       <script type="text/template" id="pr-address-form">
                                    <input type="text" placeholder="address">
                                    <input type="text" placeholder="address 2">
-                                   <select name="" id="">
+                                   <select class="pr-address-country" id="">
                                         <option>there will be countries</option>
+                                        <option value="US">USA, lol</option>
                                    </select>
-                                   <select name="" id="">
-                                   <option value="">there will be regions</option></select>
+                                   <select class="pr-address-region" name="" id="">
+                                        <option value="">there will be regions</option></select>
                                    <input type="text" placeholder="locality">
-                        </script>     
+                        </script>
+                        <script type="text/template" id="pr-address-options">
+                            {{#each options}}
+                                <option value="{{code}}">{{name}}</option>
+                            {{/each}}
+                        </script>
                  
                 </div><!--
              --><aside class="pr-summary">
@@ -93,7 +111,7 @@
         <script src="js/vendor/backbone.js"></script>
         <script src="js/vendor/handlebars.js"></script>
         <!-- plugins -->
-        <script src="js/vendor/backbone.localStorage-min.js"></script>
+        <!--<script src="js/vendor/backbone.localStorage-min.js"></script>-->
         <!-- my code -->
         <script data-main="js/main" src="js/vendor/require.js"></script>
     </body>

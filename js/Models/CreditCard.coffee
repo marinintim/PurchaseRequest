@@ -4,12 +4,16 @@ define "Models/CreditCard",
 		attributes: 
 			number: ""
 			cardholder: ""
-			expires: ""
-		defaults:
-			number: "1234123412341234"
-			cardholder: "Ivan Ivanov"
-			expires: "2034/12"
+			expiration_month: ""
+			expiration_year: ""
 
+		validate: (attributes) ->
+			# credit card number validation?
+			expire_date = Date.parse(+ attributes.expiration_month + "/1/" + attributes.expiration_year)
+			today_date = Date()
+			return "Already expired credit card!" if expire_date - today_date <= 0
+
+			return
 
 	}
 

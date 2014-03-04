@@ -6,6 +6,7 @@ define "Views/Summary",
 
 		initialize: ->
 			this.listenTo this.model, "change", this.render
+			this.render()
 
 		template: Handlebars.compile $("#pr-summary").html()
 		render: ->

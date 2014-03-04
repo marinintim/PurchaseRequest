@@ -6,7 +6,6 @@ define "Views/Global",
 			this.model = new PurchaseRequest
 			this.formView = new FormView {model: this.model}
 			this.summaryView = new SummaryView {model: this.model}
-			this.render()
 			return
 
 		render: ->

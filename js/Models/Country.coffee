@@ -1,17 +1,16 @@
 define "Models/Country",
 -> 
-	Country = Backbone.Model.extend
-		collection: CountryCollection
+	Region = Backbone.Model.extend
 		attributes:
 			code: ""
-			regions: {}
-			
-
-
-	CountryCollection = Backbone.Collection.extend
-		model: Country
-
-	RegionsCollection = 
-		"US": "lol"
-		
+			name: ""
+	RegionCollection = Backbone.Collection.extend
+		model: Region
+		url: ->
+			"http://jsonstub.com" + "/countries/" + this.attributes.code + "/regions"
+	Country = Backbone.Model.extend
+		attributes:
+			code: ""
+			country: ""
+		regions: RegionCollection
 	return Country

@@ -10,13 +10,9 @@ define "Views/Form",
 		initialize: ->
 
 			this.creditCardView = new CreditCardView {model: this.model.creditCard}
-			this.shippingView = new AddressView {model: this.model.shippingAddress}
-			this.billingView = new AddressView {model: this.model.billingAddress}
-			this.render()
+			this.shippingView = new AddressView {el: $('.pr-address-shipping'), model: this.model.shippingAddress}
+			this.billingView = new AddressView {el: $('.pr-address-billing'), model: this.model.billingAddress, samePossible: true}
 
 		template: Handlebars.compile $(".pr-form").html()
 		render: ->
-			this.creditCardView.render()
-			this.shippingView.render()
-			this.billingView.render()
 	}

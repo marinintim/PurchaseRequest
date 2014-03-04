@@ -1,7 +1,3 @@
-/* ==========================================================================
-   HTML5 Boilerplate styles - h5bp.com (generated via initializr.com)
-   ========================================================================== */
-
 html,
 button,
 input,
@@ -11,146 +7,196 @@ textarea {
 }
 
 body {
-    font-size: 1em;
-    line-height: 1.4;
-}
-
-::-moz-selection {
-    background: #b3d4fc;
-    text-shadow: none;
-}
-
-::selection {
-    background: #b3d4fc;
-    text-shadow: none;
-}
-
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
-}
-
-img {
-    vertical-align: middle;
-}
-
-fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
-}
-
-textarea {
-    resize: vertical;
-}
-
-
-/* ===== Initializr Styles ==================================================
-   Author: Jonathan Verrecchia - verekia.com/initializr/responsive-template
-   ========================================================================== */
-
-body {
     font: 16px/26px Helvetica, Helvetica Neue, Arial;
 }
 
-.wrapper {
-    width: 90%;
-    margin: 0 5%;
-}
+    .main {
+        padding: 2em;
+        position: relative;
+    }
+
+        .breadcrumbs {
+            font-size: 18pt;
+            font-weight: 700;
+            color: gray;
+        }
+
+            .breadcrumbs img {
+                display: inline;
+                vertical-align: middle;
+                width: 80px;
+                height: 70px;
+            }
+
+            .breadcrumbs-active {
+                color: black;
+            }
+
+        .manageline {
+            color: white;
+            font-size: 16pt;
+            height: 2em;
+            line-height: 2em;
+            padding-left: 1em;
+            vertical-align: middle;
+            background: #8EB4D9;
+        }
+
+            .pr-send {
+                float: right;
+                background: #00A2FF;
+                color: white;
+                box-shadow: none;
+                border: none;
+                height: 100%;
+                padding: 0.2em 3em;
+            }
+
+
+        .pr-form {
+            width: 70%;
+            vertical-align: top;
+            display: inline-block;
+            margin-left: 1em;
+        }
+            
+            .pr-form select, .pr-form input {
+                margin: 10px 0;
+                padding: 10px;
+                height: 3em;
+                background: white;
+                border: 1px #C8C8C8 solid;
+            }
+
+            .pr-form-field-label {
+                width: 150px;
+                display: inline-block;
+            }
+            .pr-form-label {
+                width: 200px;
+                display: inline-block;
+            }
+
+                .pr-form label:after {
+                    content: ':';
+                }
+
+
+            .pr-payment, .pr-shipping {
+                margin-left: 2em;
+                line-height: 3em;
+                vertical-align: middle;
+                font-size: 14pt;
+            }
+                .pr-billing {
+                    margin-top: 1em;
+                }
+
+                .pr-creditcard,
+                .pr-address-billing,
+                .pr-address-shipping {
+                    display: inline-block;
+                    vertical-align: top;
+                }
+
+                    .pr-creditcard > select,
+                    .pr-address-billing > select,
+                    .pr-address-shipping > select {
+                        width: 400px;
+                        
+                    }
+
+                    .pr-creditcard-form-expire,
+                    .pr-creditcard-form-expire-year {
+                        width: 100px;
+                    }
+
+
+                    .pr-address-address,
+                    .pr-address-address2,
+                    .pr-address-locality {
+                        width: 625px;
+                    }
+
+                    .pr-address-country {
+                        width: 230px;
+                    }
+                    .pr-address-region {
+                        width: 230px;
+                    }
+
+                    .pr-address-region-label {
+                        margin-left: 37px;
+                    }
+
+                    .pr-address-form, .pr-creditcard-form {
+                        width: 800px;
+                        margin-left: -150px;
+                    }
 
 
 
-.header-container {
-    border-bottom: 20px solid #307CDA;
-}
 
-header small {
-    display: block;
-    margin-top: 0.5em;
-}
+        .pr-summary {
+            padding-top: 3em;
+            display: inline-block;
+            vertical-align: top;
+            float: right;
+        }
 
-.footer-container {
-    border-top: 20px solid #1C80EE;
-}
+            .pr-summary p {
+                display: block;
+                border-radius: 6px;
+                background: #E6EEF7;
+                padding: 2em;
+                text-align: right;
+            }
 
-.header-container,
-.footer-container {
-    background: #AAC5F0;
-}
+            .pr-summary em {
+                color: gray;
+            }
 
-.title {
-    color: black;
-}
-
-/* ==============
-    MOBILE: Menu
-   ============== */
-
-nav ul {
-    margin: 0;
-    padding: 0;
-    width: 40%;
-    float: right;
-}
-nav li  {
-    margin-left: 15px;
-    display: inline-block;
-
-}
-nav a {
-    padding: 5px;
-    display: inline-block;
-    
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-
-    color: black;
-    background: #307CDA;
-}
-
-nav a:hover,
-nav a:visited {
-    color: black;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-/* ==============
-    MOBILE: Main
-   ============== */
-
-.main {
-    padding: 30px 0;
-}
-
-.main article h1 {
-    font-size: 2em;
-}
-
-.main-container aside {
-    color: black;
-    width: 200px;
-    padding: 0px 5% 10px;
-    display: inline-block;
-}
-
-.footer-container footer {
-    color: black;
-    padding: 20px 0;
-}
+            .pr-summary small {
+                display: block;
+            }
 
 
 
-/* ==========================================================================
-   Author's custom styles
-   ========================================================================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -168,7 +214,7 @@ nav a:hover {
 
 .ir:before {
     content: "";
-    display: block;
+    display: inline-block;
     width: 0;
     height: 150%;
 }

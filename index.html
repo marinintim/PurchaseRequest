@@ -9,56 +9,236 @@
 
         <link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/main.css">
-        
+        <script>
+        window.onload = function() {
+            $("select").each(function(){
+                $(this).val($(this).find$("option:first").val());
+            });
+        }
+        </script>
     </head>
     <body>
-
-        <div class="header-container">
-            <header class="wrapper clearfix">
-                <h1 class="title">
-                    purchase request
-                </h1>
-            </header>
-        </div>
-
-        <div class="main-container">
-            <div class="main">
-                <div class="">
-                    
-
-                        <script type="text/template" id="">
-                               
-                        </script>       
-                 
-                </div><!--
-             --><aside>
-                    <h3>Summary</h3>
-                    <p>there will be summary, yeah</p>
-                </aside>
+        <div class="main">
+            <div class="breadcrumbs">
+                <a href="#"><img src="img/logo.png"></a>
+                Your cart >
+                Login/Register >
+                <span class="breadcrumbs-active">Checkout</span>
             </div>
 
-            
+            <div class="manageline clearfix">
+                <span>Review and purchase</span>
+                <button class="pr-send">Purchase</button></div>
+            <div class="pr-error"></div>
 
+            <div class="pr-form">
+                    <h2 class="pr-subheader">Shipping info</h2>
+                    <div class="pr-shipping">
+                        <label class="pr-form-label">Shipping address</label>
+                        <div class="pr-address-shipping"></div>
+                    </div>
+
+                    <h2 class="pr-subheader">Payment info</h2>
+                    <div class="pr-payment">
+                        <div class="pr-card">
+                            <label class="pr-form-label">Credit card</label>
+                            <div class="pr-creditcard"></div>
+                        </div>
+                       
+                        <div class="pr-billing">
+                            <label class="pr-form-label">Billing address</label>
+                            <div class="pr-address-billing"></div>
+                        </div>
+                        
+                    </div> 
+            </div><!--
+             --><aside class="pr-summary"></aside>
         </div>
 
-        <div class="footer-container">
-            <footer>
-                <p class="debug">there will be</p>
-                <h3><abbr title="made by me">mbm</abbr></h3>
-            </footer>
-        </div>
+
 
        
 
 
-        <!-- main includes -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <script src="js/vendor/jquery.js"></script>
         <script src="js/vendor/underscore.js"></script>
         <script src="js/vendor/backbone.js"></script>
         <script src="js/vendor/handlebars.js"></script>
-        <!-- plugins -->
-        <script src="js/vendor/backbone.localStorage-min.js"></script>
+
         <!-- my code -->
-        <script src="js/main.js"></script>
+        <script data-main="js/main" src="js/vendor/require.js"></script>
     </body>
+    
+
+
+    <script type="text/x-handlebars-template" id="pr-error">
+        <strong>Error: {{error}}</strong>
+    </script>
+    
+
+    <script type="text/x-handlebars-template" id="pr-summary">
+        {{#if address.address}}
+            <p>
+            {{#with address}}
+                {{address}}
+                {{#if address2}}, {{address2}}{{/if}}
+                {{#if locality}}, {{locality}}{{/if}}
+                <br />
+                <small>
+                    {{country}}
+                    {{#if region}}, {{region}}{{/if}}
+                </small>
+
+            {{/with}}
+            </p>
+        {{else}}
+            <p><em>Address is not defined</em></p>
+        {{/if}}
+    
+    
+        {{#if credit_card.number}}
+        <p>
+            {{#with credit_card}}
+                {{number}}, {{#if expiration_month}} exp {{expiration_month}}/{{expiration_year}}{{/if}}
+                <small>{{card_holder}}</small>
+            {{/with}}
+        {{else}}
+           <p><em>Credit card is not defined</em>
+        {{/if}} <br />
+        
+        
+        {{#if billing_address.address}}
+            {{#with billing_address}}
+                {{address}}
+                {{#if address2}}, {{address2}}{{/if}}
+                {{#if locality}}, {{locality}}{{/if}}<br />
+                
+                <small>
+                    {{country}}
+                    {{#if region}}, {{region}}{{/if}}
+                </small>
+            {{/with}}
+            </p>
+            {{else}}
+                <em>Billing address is not defined</em></p>
+        {{/if}}
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <script type="text/x-handlebars-template" id="pr-creditcard">
+        <select class="pr-creditcard-select">
+            {{#if cards}}
+                {{#each cards}}
+                    <option value="{{id}}">{{card_holder}}, {{number}}</option>
+                {{/each}}
+            {{/if}}
+            <option value="new">-- Add new credit card --</option>
+        </select>
+    </script>
+
+    <script type="text/x-handlebars-template" id="pr-creditcard-form">
+        <div class="pr-creditcard-form">
+            <label class="pr-form-field-label">Card number</label>
+            <input type="text" class="pr-creditcard-form-number"><br />
+
+            <label class="pr-form-field-label">Card Holder</label>
+            <input class="pr-creditcard-form-cardholder" type="text"><br />
+            
+            
+            
+            <label class="pr-form-field-label">Expire (mm/yy)</label>
+            <input type="text" class="pr-creditcard-form-expire">
+            <input type="text" class="pr-creditcard-form-expire-year">
+        </div>
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+     <script type="text/x-handlebars-template" id="pr-address">
+            <select class="pr-address-select">
+                 
+                     {{#if samePossible}}<option value="same">-- Same as shipping address -- </option>{{/if}}
+                     {{#each addresses}}
+                         <option value="{{id}}">{{address}}, {{locality}}</option>
+                     {{/each}}
+                 
+                 <option value="new">-- Add new address --</option>
+            </select>
+     </script>
+
+    <script type="text/x-handlebars-template" id="pr-address-form">
+        <div class="pr-address-form">
+            <label class="pr-form-field-label">Address</label><input type="text" class="pr-address-address" placeholder="address"><!--
+         --><label class="pr-form-field-label">Address2</label><input type="text" class="pr-address-address2" placeholder="address 2"><!--
+         --><div class="pr-address-countryregion">
+                <label class="pr-form-field-label">Country</label><select class="pr-address-country" id="">
+                 {{#each countries}}
+                    <option value="{{code}}">{{name}}</option>
+                 {{/each}}
+                </select><!--
+            --><label class="pr-form-field-label pr-address-region-label">Region</label><!--
+            --><select class="pr-address-region" name="" id="">
+                    <option val="">Choose country</option>
+                </select>
+            </div><!--
+         --><label class="pr-form-field-label">Locality</label><input type="text" class="pr-address-locality" placeholder="locality">
+        </div>
+     </script>
+
+     <script type="text/x-handlebars-template" id="pr-address-options">
+         {{#each options}}
+             <option value="{{code}}">{{name}}</option>
+         {{/each}}
+    </script>
+
+
+
+
+
+
+
 </html>

@@ -16,6 +16,7 @@
         });
       },
       send: function() {
+        console.log(this.model);
         return Backbone.sync("create", this.model, {
           success: this.redirect,
           error: this.error

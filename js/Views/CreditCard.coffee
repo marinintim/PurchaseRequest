@@ -29,9 +29,7 @@ define "Views/CreditCard",
 			this.model = new CreditCard
 			this.parentModel = options.parentModel
 			this.collection = new CreditCardCollection
-			this.collection.fetch({success:_.bind(this.render, this)})
-#			this.listenTo this.$el.find('input'), "input", _.bind this.updateModel, this
-			
+			this.collection.fetch({success:_.bind(this.render, this)})			
 			this.listenTo this.model, "change", _.bind this.updateParent, this
 			return 
 

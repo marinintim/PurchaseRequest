@@ -10,6 +10,7 @@ define "Views/Global",
 			this.summaryView = new SummaryView {model: this.model}
 			return
 		send: ->
+			console.log(this.model)
 			Backbone.sync("create",this.model,{success:this.redirect,error:this.error})
 
 		error: (response)->

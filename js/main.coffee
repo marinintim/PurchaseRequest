@@ -9,7 +9,7 @@ return require ['Views/Global'],
 	  }
 
 	  default: ->
-	  	app.GlobalView = new GlobalView($('body'))
+	  	app.GlobalView = new GlobalView({el: $('body')})
 	}
 
 	window.app = app

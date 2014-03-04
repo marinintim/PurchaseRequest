@@ -8,26 +8,16 @@
         shippingAddress: Address,
         billingAddress: Address
       },
-      defaults: {
-        creditCard: new CreditCard({
-          "cardholder": "Petr",
-          expires: "never",
-          number: "123456789765"
-        }),
-        shippingAddress: new Address({
-          address: "Lenina, 3",
-          address2: "kv 2",
-          locality: "Moon",
-          country: "US",
-          region: "CA"
-        }),
-        billingAddress: new Address({
-          address: "Lenina, 3",
-          address2: "kv 2",
-          locality: "Moon",
-          country: "US",
-          region: "CA"
-        })
+      url: function() {
+        return "http://jsonstub.com" + "/orders";
+      },
+      toJSON: function() {
+        var _ref, _ref1, _ref2;
+        return {
+          creditCard: (_ref = this.attributes.creditCard) != null ? _ref.toJSON() : void 0,
+          shippingAddress: (_ref1 = this.attributes.shippingAddress) != null ? _ref1.toJSON() : void 0,
+          billingAddress: (_ref2 = this.attributes.billingAddress) != null ? _ref2.toJSON() : void 0
+        };
       }
     });
   });

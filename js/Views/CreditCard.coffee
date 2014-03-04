@@ -4,11 +4,36 @@ define "Views/CreditCard",
 	CreditCardView = Backbone.View.extend 
 		el: $(".pr-creditcard")
 		events:
-			"change": "render"
-		initialize: ->
+			"change .pr-creditcard-select": "updateToSelected"
+			"change input": "updateModel"
+
+		updateToSelected: ->
+			newModel = this.collection.get($(".pr-creditcard select :selected").val())
+			this.model = newModel || this.model
+			this.render()
+
+		updateParent: ->
+			this.parentModel.set("creditCard",this.model)
+			console.log 'updating pr from cc'
+
+		updateModel:  ->
+			this.model.set
+				card_holder: this.$el.find('#pr-creditcard-form-cardholder').val()
+				expiration_month: this.$el.find('#pr-creditcard-form-expire').val()
+				expiration_year: this.$el.find('#pr-creditcard-form-expire-year').val()
+				number: this.$el.find('#pr-creditcard-form-number').val()
+			console.log 'updating credit card model'
+
+		initialize: (options) ->
+			options ?= {}
 			this.model = new CreditCard
+			this.parentModel = options.parentModel
 			this.collection = new CreditCardCollection
 			this.collection.fetch({success:_.bind(this.render, this)})
+#			this.listenTo this.$el.find('input'), "input", _.bind this.updateModel, this
+			
+			this.listenTo this.model, "change", _.bind this.updateParent, this
+			return 
 
 
 		template: Handlebars.compile $("#pr-creditcard").html()
@@ -17,7 +42,6 @@ define "Views/CreditCard",
 		render: ->
 			# save selection
 			selected = $(".pr-creditcard select :selected").val()
-			console.log JSON.stringify this.collection
 			this.$el.html this.template
 				cards: this.collection.toJSON()
 

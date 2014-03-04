@@ -8,7 +8,9 @@
         "*default": "default"
       },
       "default": function() {
-        return app.GlobalView = new GlobalView($('body'));
+        return app.GlobalView = new GlobalView({
+          el: $('body')
+        });
       }
     });
     window.app = app;

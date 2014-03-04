@@ -29,13 +29,12 @@
         regions = (_ref = this.countryCollection.findWhere({
           code: searchCode
         })) != null ? _ref.regions.models : void 0;
-        this.$el.children('.pr-address-regions').html(this.templateOptions({
-          options: regions
-        }));
+        this.$el.children('.pr-address-regions').html('<option>S00KA</OPTION>');
       },
       render: function() {
         var selected;
         selected = this.$el.find(".pr-address-select :selected").val();
+        this.model = this.collection.get(selected);
         console.log("rendering " + this.$el.className);
         this.$el.html(this.template({
           addresses: this.collection.toJSON()

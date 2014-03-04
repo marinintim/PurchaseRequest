@@ -11,7 +11,7 @@
       template: Handlebars.compile($("#pr-summary").html()),
       render: function() {
         console.log("rendering summary");
-        return this.$el.html(this.template(JSON.stringify(this.model)));
+        return this.$el.html(this.template(this.model.toJSON()));
       }
     });
   });

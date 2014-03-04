@@ -23,11 +23,12 @@ define "Views/Address",
 		updateRegions: ->
 			searchCode = this.$el.find('.pr-address-country').val()
 			regions = this.countryCollection.findWhere({code: searchCode})?.regions.models
-			this.$el.children('.pr-address-regions').html this.templateOptions options: regions
+			this.$el.children('.pr-address-regions').html '<option>S00KA</OPTION>'
 			return
 
 		render: ->
 			selected = this.$el.find(".pr-address-select :selected").val()
+			this.model = this.collection.get(selected)
 			console.log "rendering #{this.$el.className}"
 			#console.log JSON.stringify this.collection
 			#console.log JSON.stringify this.countryCollection

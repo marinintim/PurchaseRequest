@@ -5,20 +5,18 @@
     return Form = Backbone.View.extend({
       initialize: function() {
         this.creditCardView = new CreditCardView({
-          model: this.model.creditCard
+          parentModel: this.model
         });
         this.shippingView = new AddressView({
           el: $('.pr-address-shipping'),
-          model: this.model.shippingAddress
+          parentModel: this.model
         });
         return this.billingView = new AddressView({
           el: $('.pr-address-billing'),
-          model: this.model.billingAddress,
+          parentModel: this.model,
           samePossible: true
         });
-      },
-      template: Handlebars.compile($(".pr-form").html()),
-      render: function() {}
+      }
     });
   });
 

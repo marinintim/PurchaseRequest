@@ -3,6 +3,9 @@
   define("Views/Global", ['Views/Form', 'Views/Summary', 'Models/PurchaseRequest'], function(FormView, SummaryView, PurchaseRequest) {
     var GlobalView;
     return GlobalView = Backbone.View.extend({
+      events: {
+        "click .pr-send": "send"
+      },
       initialize: function() {
         this.model = new PurchaseRequest;
         this.formView = new FormView({
@@ -11,6 +14,29 @@
         this.summaryView = new SummaryView({
           model: this.model
         });
+      },
+      send: function() {
+        return Backbone.sync("create", this.model, {
+          success: this.redirect,
+          error: this.error
+        });
+      },
+      error: function(response) {
+        var res;
+        console.log(response);
+        res = response.responseJSON;
+        console.log({
+          message: res.error,
+          code: response.status,
+          code_message: response.statusText
+        });
+      },
+      redirect: function(response) {
+        if (response.success === "true") {
+
+        } else {
+          alert('fuck');
+        }
       },
       render: function() {
         this.formView.render();

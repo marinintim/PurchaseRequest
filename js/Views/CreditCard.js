@@ -5,21 +5,45 @@
     return CreditCardView = Backbone.View.extend({
       el: $(".pr-creditcard"),
       events: {
-        "change": "render"
+        "change .pr-creditcard-select": "updateToSelected",
+        "change input": "updateModel"
       },
-      initialize: function() {
+      updateToSelected: function() {
+        var newModel;
+        newModel = this.collection.get($(".pr-creditcard select :selected").val());
+        this.model = newModel || this.model;
+        return this.render();
+      },
+      updateParent: function() {
+        this.parentModel.set("creditCard", this.model);
+        return console.log('updating pr from cc');
+      },
+      updateModel: function() {
+        this.model.set({
+          card_holder: this.$el.find('#pr-creditcard-form-cardholder').val(),
+          expiration_month: this.$el.find('#pr-creditcard-form-expire').val(),
+          expiration_year: this.$el.find('#pr-creditcard-form-expire-year').val(),
+          number: this.$el.find('#pr-creditcard-form-number').val()
+        });
+        return console.log('updating credit card model');
+      },
+      initialize: function(options) {
+        if (options == null) {
+          options = {};
+        }
         this.model = new CreditCard;
+        this.parentModel = options.parentModel;
         this.collection = new CreditCardCollection;
-        return this.collection.fetch({
+        this.collection.fetch({
           success: _.bind(this.render, this)
         });
+        this.listenTo(this.model, "change", _.bind(this.updateParent, this));
       },
       template: Handlebars.compile($("#pr-creditcard").html()),
       templateForm: Handlebars.compile($("#pr-creditcard-form").html()),
       render: function() {
         var selected;
         selected = $(".pr-creditcard select :selected").val();
-        console.log(JSON.stringify(this.collection));
         this.$el.html(this.template({
           cards: this.collection.toJSON()
         }));

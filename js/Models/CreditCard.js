@@ -2,7 +2,7 @@
 (function() {
   define("Models/CreditCard", function() {
     var CreditCard;
-    return CreditCard = Backbone.Model.extend({
+    CreditCard = Backbone.Model.extend({
       attributes: {
         number: "",
         cardholder: "",
@@ -10,14 +10,63 @@
         expiration_year: ""
       },
       validate: function(attributes) {
-        var expire_date, today_date;
+        var checkNumber, expire_date, today_date;
         expire_date = Date.parse(+attributes.expiration_month + "/1/" + attributes.expiration_year);
         today_date = Date();
+        attributes.number = attributes.number.split(" ").join("");
+        checkNumber = function(number) {
+          var length, luhn;
+          length = number.length;
+          luhn = function(number) {
+            var ccard, i, sum, _i, _j, _len, _len1;
+            ccard = (function() {
+              var _i, _ref, _results;
+              _results = [];
+              for (_i = 0, _ref = number.length; 0 <= _ref ? _i <= _ref : _i >= _ref; 0 <= _ref ? _i++ : _i--) {
+                _results.push(0);
+              }
+              return _results;
+            })();
+            i = 0;
+            sum = 0;
+            for (_i = 0, _len = ccard.length; _i < _len; _i++) {
+              i = ccard[_i];
+              ccard[i] = i;
+            }
+            for (_j = 0, _len1 = ccard.length; _j < _len1; _j += 2) {
+              i = ccard[_j];
+              ccard[i] = ccard[i] * 2;
+              if (ccard[i] > 9) {
+                ccard[i] = ccard[i] - 9;
+              }
+            }
+            sum = ccard.reduce(function(x, y) {
+              return x + y;
+            });
+            return (sum % 10) === 0;
+          };
+          if (number[0] === '4' && (number.length === 13 || number.length === 16)) {
+            return luhn(number);
+          }
+          if (number[0] === '5' && number.length === 16 && (number[1] === '1' || number[1] === '5')) {
+            return luhn(number);
+          } else {
+            return false;
+          }
+        };
+        if (!parseInt(attributes.number)) {
+          return "Invalid number (not a number)";
+        }
+        if (!checkNumber(attributes.number)) {
+          return "Invalid number (not VISA or Mastercard)";
+        }
         if (expire_date - today_date <= 0) {
           return "Already expired credit card!";
         }
       }
     });
+    window.CreditCard = CreditCard;
+    return CreditCard;
   });
 
 }).call(this);

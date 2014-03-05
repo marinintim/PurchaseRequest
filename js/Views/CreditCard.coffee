@@ -5,32 +5,35 @@ define "Views/CreditCard",
 		el: $(".pr-creditcard")
 		events:
 			"change .pr-creditcard-select": "updateToSelected"
-			"change input": "updateModel"
+			"keyup": "updateModel"
 
 		updateToSelected: ->
 			newModel = this.collection.get($(".pr-creditcard select :selected").val())
 			this.model = newModel || this.model
+			this.updateParent()
 			this.render()
 
 		updateParent: ->
-			this.parentModel.set("creditCard",this.model)
-			console.log 'updating pr from cc'
+			console.log "update purchaserequest from creditcard at #{window.performance.now()}"
+			this.parentModel.set "creditCard", this.model
+			this.parentModel.trigger "change"
 
 		updateModel:  ->
+			console.log "update creditcard at #{window.performance.now()}"
 			this.model.set
-				card_holder: this.$el.find('#pr-creditcard-form-cardholder').val()
-				expiration_month: this.$el.find('#pr-creditcard-form-expire').val()
-				expiration_year: this.$el.find('#pr-creditcard-form-expire-year').val()
-				number: this.$el.find('#pr-creditcard-form-number').val()
-			console.log 'updating credit card model'
+				card_holder: this.$el.find('.pr-creditcard-form-cardholder').val()
+				expiration_month: this.$el.find('.pr-creditcard-form-expire').val()
+				expiration_year: this.$el.find('.pr-creditcard-form-expire-year').val()
+				number: this.$el.find('.pr-creditcard-form-number').val()
+			this.updateParent()
 
 		initialize: (options) ->
 			options ?= {}
 			this.model = new CreditCard
 			this.parentModel = options.parentModel
 			this.collection = new CreditCardCollection
-			this.collection.fetch({success:_.bind(this.render, this)})			
-			this.listenTo this.model, "change", _.bind this.updateParent, this
+			this.collection.fetch({success:_.bind(this.updateToSelected, this)})
+			this.updateParent()
 			return 
 
 

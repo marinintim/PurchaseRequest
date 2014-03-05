@@ -4,7 +4,11 @@
     var GlobalView;
     return GlobalView = Backbone.View.extend({
       events: {
-        "click .pr-send": "send"
+        "click .pr-send": "send",
+        "change model": "logChange"
+      },
+      logChange: function() {
+        return console.log("change event was fired");
       },
       initialize: function() {
         this.model = new PurchaseRequest;

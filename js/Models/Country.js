@@ -11,7 +11,10 @@
     RegionCollection = Backbone.Collection.extend({
       model: Region,
       url: function() {
-        return "http://jsonstub.com" + "/countries/" + this.attributes.code + "/regions";
+        return "http://jsonstub.com" + "/countries/" + this.countryCode + "/regions";
+      },
+      initialize: function(options) {
+        return this.countryCode = options.code;
       }
     });
     Country = Backbone.Model.extend({
@@ -19,7 +22,12 @@
         code: "",
         country: ""
       },
-      regions: RegionCollection
+      initialize: function(options) {
+        this.attributes.regions = new RegionCollection({
+          code: this.attributes.code
+        });
+        return this.attributes.regions.fetch();
+      }
     });
     return Country;
   });

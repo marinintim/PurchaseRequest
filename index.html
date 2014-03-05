@@ -9,101 +9,76 @@
 
         <link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/main.css">
-        
+        <script>
+        window.onload = function() {
+            $("select").each(function(){
+                $(this).val($(this).find$("option:first").val());
+            });
+        }
+        </script>
     </head>
     <body>
-
-        <div class="header-container">
-            <header class="wrapper clearfix">
-                <h1 class="title">
-                    purchase request
-                </h1>
-            </header>
-        </div>
-
-        <div class="main-container">
-            <div class="main">
-            <button class="pr-send" disabled>Send</button>
-                <div class="pr-form">
-                        <div class="pr-creditcard"></div>
-                        <script type="text/template" id="pr-creditcard">
-                            <select class="pr-creditcard-select">
-                                {{#if cards}}
-                                    {{#each cards}}
-                                        <option value="{{id}}">{{number}} &mdash; {{card_holder}} ({{expiration_month}}/{{expiration_year}})</option>
-                                    {{/each}}
-                                {{/if}}
-                                {{#else}}
-                                    <option value=""></option>
-                                {{/else}}
-                                <option value="new">-- Add new credit card --</option>
-                            </select>
-                        </script>
-
-                        <script type="text/template" id="pr-creditcard-form">
-                            <label for="pr-creditcard-form-cardholder">Card Holder</label>
-                            <input id="pr-creditcard-form-cardholder" type="text">
-                            
-                            <label for="pr-creditcard-form-number">Card number</label>
-                            <input type="text" id="pr-creditcard-form-number">
-                            
-                            <label for="pr-creditcard-form-expire">Expire month / year</label>
-                            <input type="text" id="pr-creditcard-form-expire">
-                            <input type="text" id="pr-creditcard-form-expire-year">
-                        </script>
-                        <div class="pr-address-shipping"></div>
-                        <div class="pr-address-billing"></div>
-                        <script type="text/template" id="pr-address">
-                               <select class="pr-address-select">
-                                    {{#each addresses}}
-                                        <option value="{{id}}">{{country}}, {{region}}, {{address}}, {{address2}}, {{locality}}</option>
-                                    {{/each}}
-                                    <option value="def1"> WHERE IS MY CONTENT </option>
-                                    <option value="new">-- Add new address --</option>
-                                    <option value="same">-- Same as shipping address -- </option>
-                               </select>
-                        </script>
-
-                       <script type="text/template" id="pr-address-form">
-                                   <input type="text" class="pr-address-address" placeholder="address">
-                                   <input type="text" class="pr-address-address2" placeholder="address 2">
-                                   <select class="pr-address-country" id="">
-                                        <option>there will be countries</option>
-                                        <option value="US">USA, lol</option>
-                                   </select>
-                                   <select class="pr-address-region" name="" id="">
-                                        <option value="">there will be regions</option></select>
-                                   <input type="text" class="pr-address-locality" placeholder="locality">
-                        </script>
-                        <script type="text/template" id="pr-address-options">
-                            {{#each options}}
-                                <option value="{{code}}">{{name}}</option>
-                            {{/each}}
-                        </script>
-                 
-                </div><!--
-             --><aside class="pr-summary">
-                    <script type="text/template" id="pr-summary">
-                        <h3>Summary</h3>
-                        <p>{{creditcard}}</p>
-                        <p>{{shippingaddress}}
-                        <p>{{billingaddress}}
-                    </script>
-                </aside>
+        <div class="main">
+            <div class="breadcrumbs">
+                <a href="#"><img src="img/logo.png"></a>
+                Your cart >
+                Login/Register >
+                <span class="breadcrumbs-active">Checkout</span>
             </div>
 
+            <div class="manageline clearfix">
+                <span>Review and purchase</span>
+                <button class="pr-send" disabled>Purchase</button></div>
             
+            <div class="pr-form">
+                    <h2 class="pr-subheader">Shipping info</h2>
+                    <div class="pr-shipping">
+                        <label class="pr-form-label">Shipping address</label>
+                        <div class="pr-address-shipping"></div>
+                    </div>
 
+                    <h2 class="pr-subheader">Payment info</h2>
+                    <div class="pr-payment">
+                        <div class="pr-card">
+                            <label class="pr-form-label">Credit card</label>
+                            <div class="pr-creditcard"></div>
+                        </div>
+                       
+                        <div class="pr-billing">
+                            <label class="pr-form-label">Billing address</label>
+                            <div class="pr-address-billing"></div>
+                        </div>
+                        
+                    </div> 
+            </div><!--
+             --><aside class="pr-summary"></aside>
         </div>
 
-        <div class="footer-container">
-            <footer>
-                <p class="debug">there will be debug info</p>
-                <h3><abbr title="made by me">mbm</abbr></h3>
-            </footer>
-        </div>
+
 
        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         <!-- main includes -->
@@ -116,4 +91,156 @@
         <!-- my code -->
         <script data-main="js/main" src="js/vendor/require.js"></script>
     </body>
+    
+
+
+
+
+
+    <script type="text/template" id="pr-summary">
+        {{#if shippingAddress.address}}
+            <p>
+            {{#with shippingAddress}}
+                {{address}}
+                {{#if address2}}, {{address2}}{{/if}}
+                {{#if locality}}, {{locality}}{{/if}}
+                <br />
+                <small>
+                    {{country}}
+                    {{#if region}}, {{region}}{{/if}}
+                </small>
+
+            {{/with}}
+            </p>
+        {{else}}
+            <p><em>Address is not defined</em></p>
+        {{/if}}
+    
+    
+        {{#if creditCard.number}}
+        <p>
+            {{#with creditCard}}
+                {{number}}, {{#if expiration_month}} exp {{expiration_month}}/{{expiration_year}}{{/if}}
+                <small>{{card_holder}}</small>
+            {{/with}}
+        {{else}}
+           <p><em>Credit card is not defined</em>
+        {{/if}} <br />
+        
+        
+        {{#if billingAddress.address}}
+            {{#with billingAddress}}
+                {{address}}
+                {{#if address2}}, {{address2}}{{/if}}
+                {{#if locality}}, {{locality}}{{/if}}<br />
+                
+                <small>
+                    {{country}}
+                    {{#if region}}, {{region}}{{/if}}
+                </small>
+            {{/with}}
+            </p>
+            {{else}}
+                <em>Billing address is not defined</em></p>
+        {{/if}}
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <script type="text/template" id="pr-creditcard">
+        <select class="pr-creditcard-select">
+            {{#if cards}}
+                {{#each cards}}
+                    <option value="{{id}}">{{card_holder}}, {{number}}</option>
+                {{/each}}
+            {{/if}}
+            <option value="new">-- Add new credit card --</option>
+        </select>
+    </script>
+
+    <script type="text/template" id="pr-creditcard-form">
+        <div class="pr-creditcard-form">
+            <label class="pr-form-field-label">Card number</label>
+            <input type="text" class="pr-creditcard-form-number"><br />
+
+            <label class="pr-form-field-label">Card Holder</label>
+            <input class="pr-creditcard-form-cardholder" type="text"><br />
+            
+            
+            
+            <label class="pr-form-field-label">Expire (mm/yy)</label>
+            <input type="text" class="pr-creditcard-form-expire">
+            <input type="text" class="pr-creditcard-form-expire-year">
+        </div>
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+     <script type="text/template" id="pr-address">
+            <select class="pr-address-select">
+                 {{#if samePossible}}<option value="same">-- Same as shipping address -- </option>{{/if}}
+                 {{#each addresses}}
+                     <option value="{{id}}">{{address}}, {{locality}}</option>
+                 {{/each}}
+                 <option value="new">-- Add new address --</option>
+            </select>
+     </script>
+
+    <script type="text/template" id="pr-address-form">
+        <div class="pr-address-form">
+            <label class="pr-form-field-label">Address</label><input type="text" class="pr-address-address" placeholder="address"><br />
+            <label class="pr-form-field-label">Address2</label><input type="text" class="pr-address-address2" placeholder="address 2"><br />
+            <div class="pr-address-countryregion">
+                <label class="pr-form-field-label">Country</label><select class="pr-address-country" id="">
+                 {{#each countries}}
+                    <option value="{{code}}">{{country}}</option>
+                 {{/each}}
+                </select>
+                <label class="pr-form-field-label">Region</label>
+                <select class="pr-address-region" name="" id="">
+                    {{#each regions}}
+                       <option value="{{code}}">{{name}}</option>
+                    {{/each}}
+                 <option value="">there will be regions</option></select><br />
+            </div>
+            <label class="pr-form-field-label">Locality</label>
+            <input type="text" class="pr-address-locality" placeholder="locality">
+        </div>
+     </script>
+
+     <script type="text/template" id="pr-address-options">
+         {{#each options}}
+             <option value="{{code}}">{{country}}</option>
+         {{/each}}
+    </script>
+
+
+
+
+
+
+
 </html>

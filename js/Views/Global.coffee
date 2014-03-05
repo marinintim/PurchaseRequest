@@ -4,6 +4,9 @@ define "Views/Global",
 	GlobalView = Backbone.View.extend {
 		events:
 			"click .pr-send": "send"
+			"change model": "logChange"
+		logChange: ->
+			console.log "change event was fired"
 		initialize: ->
 			this.model = new PurchaseRequest
 			this.formView = new FormView {model: this.model}

@@ -6,56 +6,84 @@
       events: {
         "change .pr-address-select": "updateToSelected",
         "change .pr-address-country": "updateRegions",
-        "change input": "updateModel"
+        "change .pr-address-region": "updateModel",
+        "keyup": "updateModel"
       },
       updateToSelected: function() {
-        var newModel;
-        newModel = this.collection.get(this.$el.find(".pr-address-select :selected").val());
-        console.log(this.model);
-        this.model = newModel || this.model;
-        console.log(this.model);
+        var newModel, selected;
+        if (this.samePossible) {
+          selected = this.$el.find(".pr-address-select :selected").val();
+          if (selected !== "new") {
+            newModel = this.collection.get(this.$el.find(".pr-address-select :selected").val());
+            this.model = newModel || this.model;
+          } else {
+            this.model = new Address;
+          }
+        } else {
+          newModel = this.collection.get(this.$el.find(".pr-address-select :selected").val());
+          this.model = newModel || this.model;
+        }
+        this.updateParent();
         return this.render();
       },
       updateParent: function() {
+        console.log('changing');
         this.parentModel.set("" + (this.options.samePossible === true ? "billing" : "shipping") + "Address", this.model);
-        return console.log('updating pr from address');
+        return this.parentModel.trigger("change");
       },
       updateModel: function() {
         this.model.set({
+          id: "",
           address: this.$el.find('.pr-address-address').val(),
           address2: this.$el.find('.pr-address-address2').val(),
           locality: this.$el.find('.pr-address-locality').val(),
           country: this.$el.find('.pr-address-country').val(),
           region: this.$el.find('.pr-address-region').val()
         });
-        return console.log('updating address');
+        return this.updateParent();
       },
       updateRegions: function() {
         var regions, searchCode, _ref;
-        searchCode = this.$el.find('.pr-address-country').val();
+        this.model.set('country', this.$el.find('.pr-address-country :selected').val());
+        searchCode = this.model.get('country');
         regions = (_ref = this.countryCollection.findWhere({
           code: searchCode
-        })) != null ? _ref.regions.models : void 0;
-        this.$el.children('.pr-address-regions').html('<option>S00KA</OPTION>');
+        })) != null ? _ref.get('regions').toJSON() : void 0;
+        this.$el.find('.pr-address-region').html(this.templateOptions({
+          options: regions
+        }));
+        this.updateModel();
+        return regions;
       },
       initialize: function(options) {
+        var _base;
         if (options == null) {
           options = {};
         }
         this.options = options;
+        if ((_base = this.options).samePossible == null) {
+          _base.samePossible = false;
+        }
         this.model = new Address;
         this.parentModel = options.parentModel;
         this.collection = new AddressCollection;
         this.countryCollection = new CountryCollection;
         this.countryCollection.fetch({
+          reset: true,
           success: (function(_this) {
-            return function() {};
+            return function() {
+              return _this.updateRegions;
+            };
           })(this)
         });
         this.collection.fetch({
-          success: _.bind(this.render, this)
+          success: (function(_this) {
+            return function() {
+              $('.pr-address-select option:first').attr("selected", "selected");
+              _this.updateToSelected();
+            };
+          })(this)
         });
-        this.listenTo(this.model, "change", _.bind(this.updateParent, this));
       },
       template: Handlebars.compile($("#pr-address").html()),
       templateForm: Handlebars.compile($("#pr-address-form").html()),
@@ -63,9 +91,9 @@
       render: function() {
         var selected;
         selected = this.$el.find(".pr-address-select :selected").val();
-        console.log("rendering " + this.$el.className);
         this.$el.html(this.template({
-          addresses: this.collection.toJSON()
+          addresses: this.collection.toJSON(),
+          samePossible: this.options.samePossible
         }));
         if (selected === "new") {
           this.$el.append(this.templateForm({

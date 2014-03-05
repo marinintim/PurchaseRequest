@@ -6,26 +6,29 @@
       el: $(".pr-creditcard"),
       events: {
         "change .pr-creditcard-select": "updateToSelected",
-        "change input": "updateModel"
+        "keyup": "updateModel"
       },
       updateToSelected: function() {
         var newModel;
         newModel = this.collection.get($(".pr-creditcard select :selected").val());
         this.model = newModel || this.model;
+        this.updateParent();
         return this.render();
       },
       updateParent: function() {
+        console.log("update purchaserequest from creditcard at " + (window.performance.now()));
         this.parentModel.set("creditCard", this.model);
-        return console.log('updating pr from cc');
+        return this.parentModel.trigger("change");
       },
       updateModel: function() {
+        console.log("update creditcard at " + (window.performance.now()));
         this.model.set({
-          card_holder: this.$el.find('#pr-creditcard-form-cardholder').val(),
-          expiration_month: this.$el.find('#pr-creditcard-form-expire').val(),
-          expiration_year: this.$el.find('#pr-creditcard-form-expire-year').val(),
-          number: this.$el.find('#pr-creditcard-form-number').val()
+          card_holder: this.$el.find('.pr-creditcard-form-cardholder').val(),
+          expiration_month: this.$el.find('.pr-creditcard-form-expire').val(),
+          expiration_year: this.$el.find('.pr-creditcard-form-expire-year').val(),
+          number: this.$el.find('.pr-creditcard-form-number').val()
         });
-        return console.log('updating credit card model');
+        return this.updateParent();
       },
       initialize: function(options) {
         if (options == null) {
@@ -35,9 +38,9 @@
         this.parentModel = options.parentModel;
         this.collection = new CreditCardCollection;
         this.collection.fetch({
-          success: _.bind(this.render, this)
+          success: _.bind(this.updateToSelected, this)
         });
-        this.listenTo(this.model, "change", _.bind(this.updateParent, this));
+        this.updateParent();
       },
       template: Handlebars.compile($("#pr-creditcard").html()),
       templateForm: Handlebars.compile($("#pr-creditcard-form").html()),

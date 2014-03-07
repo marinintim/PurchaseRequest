@@ -62,8 +62,9 @@ body {
             
             .pr-form select, .pr-form input {
                 margin: 10px 0;
-                padding: 0.5em;
+                padding: 10px;
                 height: 3em;
+                background: white;
                 border: 1px #C8C8C8 solid;
             }
 
@@ -114,14 +115,18 @@ body {
                     .pr-address-address,
                     .pr-address-address2,
                     .pr-address-locality {
-                        width: 650px;
+                        width: 625px;
                     }
 
                     .pr-address-country {
-                        width: 250px;
+                        width: 230px;
                     }
                     .pr-address-region {
-                        width: 250px;
+                        width: 230px;
+                    }
+
+                    .pr-address-region-label {
+                        margin-left: 37px;
                     }
 
                     .pr-address-form, .pr-creditcard-form {

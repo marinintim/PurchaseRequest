@@ -14,7 +14,7 @@
         var newModel, selected;
         selected = this.$el.find(".pr-address-select :selected").val();
         if (selected === "same" && this.options.samePossible) {
-          newModel = this.parentModel.get('address');
+          newModel = _.clone(this.parentModel.get('address'));
         } else {
           newModel = this.collection.get(selected);
         }
@@ -72,7 +72,7 @@
         this.collection.fetch({
           success: function() {
             if (_this.options.samePossible) {
-              _this.model = _this.parentModel.get('address');
+              _this.model = _.clone(_this.parentModel.get('address'));
             } else {
               _this.model = _this.collection.first();
             }

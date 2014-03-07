@@ -11,11 +11,12 @@ define "Views/Address",
 
 		updateToSelected: ->
 			selected = this.$el.find(".pr-address-select :selected").val()
-				
-			newModel = this.collection.get(selected)
+			if selected == "same" and this.options.samePossible
+				newModel = this.parentModel.get('address')
+			else 
+				newModel = this.collection.get(selected)
 			
 			this.model = newModel || this.model
-			console.log
 			this.updateParent()
 			this.render()
 

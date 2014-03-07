@@ -13,9 +13,12 @@
       updateToSelected: function() {
         var newModel, selected;
         selected = this.$el.find(".pr-address-select :selected").val();
-        newModel = this.collection.get(selected);
+        if (selected === "same" && this.options.samePossible) {
+          newModel = this.parentModel.get('address');
+        } else {
+          newModel = this.collection.get(selected);
+        }
         this.model = newModel || this.model;
-        console.log;
         this.updateParent();
         return this.render();
       },
@@ -68,7 +71,11 @@
         this.countryCollection = new CountryCollection;
         this.collection.fetch({
           success: function() {
-            _this.model = _this.collection.first();
+            if (_this.options.samePossible) {
+              _this.model = _this.parentModel.get('address');
+            } else {
+              _this.model = _this.collection.first();
+            }
             _this.updateToSelected();
           }
         });

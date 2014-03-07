@@ -114,7 +114,14 @@ body {
                     .pr-address-address,
                     .pr-address-address2,
                     .pr-address-locality {
-                        width: 400px;
+                        width: 650px;
+                    }
+
+                    .pr-address-country {
+                        width: 250px;
+                    }
+                    .pr-address-region {
+                        width: 250px;
                     }
 
                     .pr-address-form, .pr-creditcard-form {

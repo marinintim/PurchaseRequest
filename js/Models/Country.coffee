@@ -11,8 +11,12 @@ define "Models/Country",
 		initialize: (options) ->
 			this.countryCode = options.code
 		fetch: ->
-			localStorage["regions_#{this.countryCode}"] = JSON.stringify this.sync("read",this) unless localStorage["regions_#{this.countryCode}"]?
-			return JSON.parse localStorage["regions_#{this.countryCode}"]
+			if localStorage["regions_#{this.countryCode}"]?
+				this.reset JSON.parse localStorage["regions_#{this.countryCode}"]	
+			else
+				this.sync "read",this, success: (res) =>
+					localStorage["regions_#{this.countryCode}"] = JSON.stringify res
+					this.reset(res)
 	window.RC = RegionCollection
 
 	Country = Backbone.Model.extend

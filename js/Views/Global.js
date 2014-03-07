@@ -42,6 +42,9 @@
         if (((_ref = response.responseJSON) != null ? _ref.error : void 0) != null) {
           error = response.responseJSON.error;
         }
+        if ((response.status != null) && response.status === 500) {
+          $('.pr-send').attr('disabled', 'disabled');
+        }
         this.errorView = new ErrorView({
           model: this.model
         });

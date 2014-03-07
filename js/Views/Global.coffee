@@ -23,6 +23,7 @@ define "Views/Global",
 			console.log model
 			if model.validationError? then error = response
 			if response.responseJSON?.error? then error = response.responseJSON.error 
+			if response.status? and response.status == 500 then $('.pr-send').attr('disabled','disabled')
 			this.errorView = new ErrorView model: this.model
 			this.errorView.render(error)
 			return

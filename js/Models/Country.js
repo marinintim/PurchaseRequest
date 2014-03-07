@@ -18,10 +18,17 @@
         return this.countryCode = options.code;
       },
       fetch: function() {
-        if (localStorage["regions_" + this.countryCode] == null) {
-          localStorage["regions_" + this.countryCode] = JSON.stringify(this.sync("read", this));
+        var _this = this;
+        if (localStorage["regions_" + this.countryCode] != null) {
+          return this.reset(JSON.parse(localStorage["regions_" + this.countryCode]));
+        } else {
+          return this.sync("read", this, {
+            success: function(res) {
+              localStorage["regions_" + _this.countryCode] = JSON.stringify(res);
+              return _this.reset(res);
+            }
+          });
         }
-        return JSON.parse(localStorage["regions_" + this.countryCode]);
       }
     });
     window.RC = RegionCollection;

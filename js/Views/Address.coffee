@@ -10,22 +10,17 @@ define "Views/Address",
 		
 
 		updateToSelected: ->
-			if this.samePossible
-				selected = this.$el.find(".pr-address-select :selected").val()
-				if selected != "new"
-					newModel = this.collection.get(this.$el.find(".pr-address-select :selected").val())
-					this.model = newModel || this.model
-				else
-					this.model = new Address	
-			else
-				newModel = this.collection.get(this.$el.find(".pr-address-select :selected").val())
-				this.model = newModel || this.model
+			selected = this.$el.find(".pr-address-select :selected").val()
+				
+			newModel = this.collection.get(selected)
+			
+			this.model = newModel || this.model
+			console.log
 			this.updateParent()
 			this.render()
 
 		updateParent: ->
-			console.log 'changing'
-			this.parentModel.set "#{if (this.options.samePossible == true) then "billing" else "shipping"}Address", this.model
+			this.parentModel.set "#{if (this.options.samePossible == true) then "billing_" else "" }address", this.model
 			this.parentModel.trigger("change")
 
 		updateModel:  ->
@@ -39,9 +34,11 @@ define "Views/Address",
 			this.updateParent()
 
 		updateRegions: ->
-			this.model.set('country',this.$el.find('.pr-address-country :selected').val())
-			searchCode = this.model.get('country')
-			regions = this.countryCollection.findWhere({code: searchCode})?.get('regions').toJSON()
+			newCountry = this.$el.find('.pr-address-country :selected').val()
+			newCountry ?= this.model.get('country')
+			this.model.set('country',newCountry) if newCountry != undefined
+
+			regions = this.countryCollection.findWhere(code: newCountry).regions.toJSON()
 			
 			this.$el.find('.pr-address-region').html this.templateOptions {options: regions}
 			this.updateModel()
@@ -60,13 +57,15 @@ define "Views/Address",
 			
 
 			this.countryCollection = new CountryCollection
-			this.countryCollection.fetch reset: true, success: =>
-				this.updateRegions
+			
 
 			this.collection.fetch success: =>
-				$('.pr-address-select option:first').attr("selected","selected")
+				this.model = this.collection.first()
 				this.updateToSelected()
 				return
+
+			this.countryCollection.fetch success: =>
+				this.updateRegions
 
 			return
 
@@ -77,8 +76,7 @@ define "Views/Address",
 
 		render: ->
 			selected = this.$el.find(".pr-address-select :selected").val()
-
-			this.$el.html this.template({addresses: this.collection.toJSON(), samePossible: this.options.samePossible})
+			this.$el.html this.template addresses: this.collection.toJSON(), samePossible: this.options.samePossible
 
 			if selected == "new"
 				this.$el.append this.templateForm countries: this.countryCollection.toJSON()

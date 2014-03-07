@@ -14,12 +14,10 @@ define "Views/CreditCard",
 			this.render()
 
 		updateParent: ->
-			console.log "update purchaserequest from creditcard at #{window.performance.now()}"
-			this.parentModel.set "creditCard", this.model
+			this.parentModel.set "credit_card", this.model
 			this.parentModel.trigger "change"
 
 		updateModel:  ->
-			console.log "update creditcard at #{window.performance.now()}"
 			this.model.set
 				card_holder: this.$el.find('.pr-creditcard-form-cardholder').val()
 				expiration_month: this.$el.find('.pr-creditcard-form-expire').val()
@@ -32,7 +30,9 @@ define "Views/CreditCard",
 			this.model = new CreditCard
 			this.parentModel = options.parentModel
 			this.collection = new CreditCardCollection
-			this.collection.fetch({success:_.bind(this.updateToSelected, this)})
+			this.collection.fetch success: =>
+				this.model = this.collection.first()
+				this.updateToSelected()
 			this.updateParent()
 			return 
 

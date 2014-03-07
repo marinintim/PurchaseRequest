@@ -28,8 +28,9 @@
 
             <div class="manageline clearfix">
                 <span>Review and purchase</span>
-                <button class="pr-send" disabled>Purchase</button></div>
-            
+                <button class="pr-send">Purchase</button></div>
+            <div class="pr-error"></div>
+
             <div class="pr-form">
                     <h2 class="pr-subheader">Shipping info</h2>
                     <div class="pr-shipping">
@@ -94,13 +95,15 @@
     
 
 
+    <script type="text/x-handlebars-template" id="pr-error">
+        <em>Error: {{error}}</em>
+    </script>
+    
 
-
-
-    <script type="text/template" id="pr-summary">
-        {{#if shippingAddress.address}}
+    <script type="text/x-handlebars-template" id="pr-summary">
+        {{#if address.address}}
             <p>
-            {{#with shippingAddress}}
+            {{#with address}}
                 {{address}}
                 {{#if address2}}, {{address2}}{{/if}}
                 {{#if locality}}, {{locality}}{{/if}}
@@ -117,9 +120,9 @@
         {{/if}}
     
     
-        {{#if creditCard.number}}
+        {{#if credit_card.number}}
         <p>
-            {{#with creditCard}}
+            {{#with credit_card}}
                 {{number}}, {{#if expiration_month}} exp {{expiration_month}}/{{expiration_year}}{{/if}}
                 <small>{{card_holder}}</small>
             {{/with}}
@@ -128,8 +131,8 @@
         {{/if}} <br />
         
         
-        {{#if billingAddress.address}}
-            {{#with billingAddress}}
+        {{#if billing_address.address}}
+            {{#with billing_address}}
                 {{address}}
                 {{#if address2}}, {{address2}}{{/if}}
                 {{#if locality}}, {{locality}}{{/if}}<br />
@@ -161,7 +164,7 @@
 
 
     
-    <script type="text/template" id="pr-creditcard">
+    <script type="text/x-handlebars-template" id="pr-creditcard">
         <select class="pr-creditcard-select">
             {{#if cards}}
                 {{#each cards}}
@@ -172,7 +175,7 @@
         </select>
     </script>
 
-    <script type="text/template" id="pr-creditcard-form">
+    <script type="text/x-handlebars-template" id="pr-creditcard-form">
         <div class="pr-creditcard-form">
             <label class="pr-form-field-label">Card number</label>
             <input type="text" class="pr-creditcard-form-number"><br />
@@ -199,41 +202,43 @@
 
 
 
-     <script type="text/template" id="pr-address">
+     <script type="text/x-handlebars-template" id="pr-address">
             <select class="pr-address-select">
-                 {{#if samePossible}}<option value="same">-- Same as shipping address -- </option>{{/if}}
-                 {{#each addresses}}
-                     <option value="{{id}}">{{address}}, {{locality}}</option>
-                 {{/each}}
+                 
+                     {{#if samePossible}}<option value="same">-- Same as shipping address -- </option>{{/if}}
+                     {{#each addresses}}
+                         <option value="{{id}}">{{address}}, {{locality}}</option>
+                     {{/each}}
+                 
+                     <option disabled>loading data from server</option>
+                 
                  <option value="new">-- Add new address --</option>
             </select>
      </script>
 
-    <script type="text/template" id="pr-address-form">
+    <script type="text/x-handlebars-template" id="pr-address-form">
         <div class="pr-address-form">
             <label class="pr-form-field-label">Address</label><input type="text" class="pr-address-address" placeholder="address"><br />
             <label class="pr-form-field-label">Address2</label><input type="text" class="pr-address-address2" placeholder="address 2"><br />
             <div class="pr-address-countryregion">
                 <label class="pr-form-field-label">Country</label><select class="pr-address-country" id="">
                  {{#each countries}}
-                    <option value="{{code}}">{{country}}</option>
+                    <option value="{{code}}">{{name}}</option>
                  {{/each}}
                 </select>
                 <label class="pr-form-field-label">Region</label>
                 <select class="pr-address-region" name="" id="">
-                    {{#each regions}}
-                       <option value="{{code}}">{{name}}</option>
-                    {{/each}}
-                 <option value="">there will be regions</option></select><br />
+                    <option val="">Choose country</option>
+                </select><br />
             </div>
             <label class="pr-form-field-label">Locality</label>
             <input type="text" class="pr-address-locality" placeholder="locality">
         </div>
      </script>
 
-     <script type="text/template" id="pr-address-options">
+     <script type="text/x-handlebars-template" id="pr-address-options">
          {{#each options}}
-             <option value="{{code}}">{{country}}</option>
+             <option value="{{code}}">{{name}}</option>
          {{/each}}
     </script>
 

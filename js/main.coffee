@@ -20,11 +20,14 @@ return require ['Views/Global'],
 		"JsonStub-Project-Key": "1fa9f304-dc7d-4cb9-b439-24b2276087c4"		
 
 	$.ajaxSetup
-		headers: jsonstubheaders
+		#headers: jsonstubheaders
 		beforeSend: (req) ->
 			console.log req
     
 	#/JSONStub
+	#
+	#
+	
 
 	#Simple debug for handlebars
 	Handlebars.registerHelper "debug", (optionalValue) ->

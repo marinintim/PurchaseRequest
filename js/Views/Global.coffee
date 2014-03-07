@@ -1,34 +1,35 @@
 define "Views/Global",
-['Views/Form','Views/Summary','Models/PurchaseRequest'],
-(FormView, SummaryView, PurchaseRequest) -> 
+['Views/Form','Views/Summary','Views/Error', 'Models/PurchaseRequest'],
+(FormView, SummaryView, ErrorView, PurchaseRequest) -> 
 	GlobalView = Backbone.View.extend {
 		events:
 			"click .pr-send": "send"
-			"change model": "logChange"
-		logChange: ->
-			console.log "change event was fired"
 		initialize: ->
 			this.model = new PurchaseRequest
-			this.formView = new FormView {model: this.model}
-			this.summaryView = new SummaryView {model: this.model}
+			this.formView = new FormView model: this.model
+			this.summaryView = new SummaryView model: this.model
+			this.errorView = new ErrorView model: this.model
+			this.listenTo this.model, "invalid", this.error
 			return
 		send: ->
-			console.log(this.model)
-			Backbone.sync("create",this.model,{success:this.redirect,error:this.error})
+			this.errorView?.unrender()
+			console.log this.model.toJSON()
+			this.model.save({},{success:this.redirect,error:this.error})
+			#Backbone.sync("create",this.model,{success:this.redirect,error:this.error})
 
-		error: (response)->
+		error: (model,response)->
+			console.log "houston, we've got problem"
 			console.log response
-			res = response.responseJSON
-			#this.errorView = new ErrorView(
-			console.log {message: res.error, code: response.status, code_message: response.statusText}
-			#)
+			console.log model
+			if model.validationError? then error = response
+			if response.responseJSON?.error? then error = response.responseJSON.error 
+			this.errorView = new ErrorView model: this.model
+			this.errorView.render(error)
 			return
 
 		redirect: (response) ->
-			if response.success == "true"
-				#window.location.replace(response.redirect_url.toString()) 
-			else
-				alert 'fuck'
+
+			#window.location.replace(response.redirect_url.toString()) 
 			return
 
 		render: ->

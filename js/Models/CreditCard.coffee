@@ -9,10 +9,15 @@ define "Models/CreditCard",
 			expiration_year: ""
 
 		validate: (attributes) ->
+			attributes ?= this.attributes
+			return "Credit card fields are not filled" unless attributes
+			return "Credit card: expiration date is incomplete" unless attributes.expiration_month and attributes.expiration_year
+			return "Credit card: card number is empty" unless attributes.number
+			return "Credit card: cardholder is empty" unless attributes.card_holder
+
 			# credit card number validation?
-			expire_date = Date.parse(+ attributes.expiration_month + "/1/" + attributes.expiration_year)
-			today_date = Date()
-			attributes.number = attributes.number.split(" ").join("")
+			
+			number = parseInt(this.attributes.number.split(" ").join(""),10)
 			checkNumber = (number) ->
 				length = number.length
 				luhn = (number) ->
@@ -40,12 +45,14 @@ define "Models/CreditCard",
 				
 			
 
-
-			return "Invalid number (not a number)" if !parseInt(attributes.number)
+			# server does not return numbers
+			#return "Invalid number (not a number)" if !parseInt(number)
 			
-			return "Invalid number (not VISA or Mastercard)" if !checkNumber(attributes.number)
+			#but if user gives us full number, we can check it
+			return "Invalid number (not VISA or Mastercard)" if parseInt(number) and !checkNumber(attributes.number)
 			
+			expire_date = Date.parse("#{attributes.expiration_month}/1/#{attributes.expiration_year}")
+			today_date = new Date()
 			return "Already expired credit card!" if expire_date - today_date <= 0
-			
-	window.CreditCard = CreditCard
+
 	return CreditCard

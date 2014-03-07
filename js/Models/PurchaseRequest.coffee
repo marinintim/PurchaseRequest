@@ -3,14 +3,31 @@ define "Models/PurchaseRequest",
 (Address, CreditCard) -> 
 	PurchaseRequest = Backbone.Model.extend
 		attributes: 
-			creditCard: CreditCard
-			shippingAddress: Address
-			billingAddress: Address
+			credit_card: CreditCard
+			address: Address
+			billing_address: Address
 		url: ->
-			"http://jsonstub.com" + "/orders"
+			"http://localhost:3000" + "/orders"
 		toJSON: ->
 			return {
-				creditCard: this.attributes.creditCard?.toJSON()
-				shippingAddress: this.attributes.shippingAddress?.toJSON()
-				billingAddress: this.attributes.billingAddress?.toJSON()
+				credit_card_id: this.get('credit_card')?.get('id')
+				billing_address_id: this.get('billingAddress')?.get('id')
+				address_id: this.get('address')?.get('id')
+				credit_card: this.get('credit_card')?.toJSON()
+				address: this.get('address')?.toJSON()
+				billing_address: this.get('billing_address')?.toJSON()
 			}
+		validate: ->
+			cardInvalid = this.get('credit_card')?.validate()
+			shippingInvalid = this.get('address')?.validate()
+			billingInvalid = this.get('billing_address')?.validate()
+
+			return cardInvalid if cardInvalid
+			return shippingInvalid if shippingInvalid
+			return billingInvalid if billingInvalid
+
+		###Simple debug for Backbone.sync
+		sync: (method, model) ->
+			console.log('sync in action')
+			console.log(JSON.stringify(model))
+		###

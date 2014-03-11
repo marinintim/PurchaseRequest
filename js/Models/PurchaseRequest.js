@@ -13,14 +13,23 @@
         return "http://localhost:3000" + "/orders";
       },
       toJSON: function() {
-        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+        var address, address_id, billing_address, billing_address_id, credit_card, credit_card_id, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+        credit_card_id = (_ref = this.get('credit_card')) != null ? _ref.get('id') : void 0;
+        billing_address_id = (_ref1 = this.get('billingAddress')) != null ? _ref1.get('id') : void 0;
+        address_id = (_ref2 = this.get('address')) != null ? _ref2.get('id') : void 0;
+        credit_card = (_ref3 = this.get('credit_card')) != null ? _ref3.toJSON() : void 0;
+        address = (_ref4 = this.get('address')) != null ? _ref4.toJSON() : void 0;
+        billing_address = (_ref5 = this.get('billing_address')) != null ? _ref5.toJSON() : void 0;
+        if (billing_address == null) {
+          billing_address = address;
+        }
         return {
-          credit_card_id: (_ref = this.get('credit_card')) != null ? _ref.get('id') : void 0,
-          billing_address_id: (_ref1 = this.get('billingAddress')) != null ? _ref1.get('id') : void 0,
-          address_id: (_ref2 = this.get('address')) != null ? _ref2.get('id') : void 0,
-          credit_card: (_ref3 = this.get('credit_card')) != null ? _ref3.toJSON() : void 0,
-          address: (_ref4 = this.get('address')) != null ? _ref4.toJSON() : void 0,
-          billing_address: (_ref5 = this.get('billing_address')) != null ? _ref5.toJSON() : void 0
+          credit_card_id: credit_card_id,
+          billing_address_id: billing_address_id,
+          address_id: address_id,
+          credit_card: credit_card,
+          address: address,
+          billing_address: billing_address
         };
       },
       validate: function() {

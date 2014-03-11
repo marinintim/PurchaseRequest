@@ -13,12 +13,14 @@
       updateToSelected: function() {
         var newModel, selected;
         selected = this.$el.find(".pr-address-select :selected").val();
-        if (selected === "same" && this.options.samePossible) {
-          newModel = _.clone(this.parentModel.get('address'));
+        if (selected === "same") {
+          newModel = this.parentModel.get('address');
         } else {
           newModel = this.collection.get(selected);
         }
-        this.model = newModel || this.model;
+        if (typeof (newModel != null ? newModel.toJSON : void 0) === 'function') {
+          this.model.set(newModel.toJSON());
+        }
         this.updateParent();
         return this.render();
       },
@@ -72,7 +74,7 @@
         this.collection.fetch({
           success: function() {
             if (_this.options.samePossible) {
-              _this.model = _.clone(_this.parentModel.get('address'));
+              _this.model = void 0;
             } else {
               _this.model = _this.collection.first();
             }

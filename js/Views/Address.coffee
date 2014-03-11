@@ -11,12 +11,13 @@ define "Views/Address",
 
 		updateToSelected: ->
 			selected = this.$el.find(".pr-address-select :selected").val()
-			if selected == "same" and this.options.samePossible
-				newModel = _.clone this.parentModel.get('address')
+			if selected == "same"
+				newModel = this.parentModel.get('address')
 			else 
 				newModel = this.collection.get(selected)
-			
-			this.model = newModel || this.model
+			if typeof newModel?.toJSON == 'function'
+				this.model.set(newModel.toJSON())
+			#this.model = newModel || this.model
 			this.updateParent()
 			this.render()
 
@@ -62,7 +63,7 @@ define "Views/Address",
 
 			this.collection.fetch success: =>
 				if this.options.samePossible
-					this.model = _.clone this.parentModel.get('address')
+					this.model = undefined
 				else
 					this.model = this.collection.first()
 				this.updateToSelected()

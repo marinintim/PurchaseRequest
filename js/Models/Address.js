@@ -28,18 +28,6 @@
           return "region is not chosen";
         }
       }
-      /*
-      		toJSON: ->
-      			console.log this
-      			return {
-      				address: this.get('address')
-      				address2: this.get('address2')
-      				locality: this.get('locality')
-      				country: this.get('country') #Country.attributes.country
-      				region: this.get('region')
-      			}
-      */
-
     });
   });
 

@@ -25,7 +25,6 @@
         if ((_ref = this.errorView) != null) {
           _ref.unrender();
         }
-        console.log(this.model.toJSON());
         return this.model.save({}, {
           success: this.redirect,
           error: this.error
@@ -33,9 +32,6 @@
       },
       error: function(model, response) {
         var error, _ref;
-        console.log("houston, we've got problem");
-        console.log(response);
-        console.log(model);
         if (model.validationError != null) {
           error = response;
         }
@@ -50,7 +46,9 @@
         });
         this.errorView.render(error);
       },
-      redirect: function(response) {},
+      redirect: function(response) {
+        window.location.replace(response.redirect_url.toString());
+      },
       render: function() {
         this.formView.render();
         this.summaryView.render();

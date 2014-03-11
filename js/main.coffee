@@ -12,6 +12,7 @@ return require ['Views/Global'],
 	  	app.GlobalView = new GlobalView({el: $('body')})
 	}
 
+	###
 	window.app = app
 
 	#JSONStub
@@ -40,7 +41,8 @@ return require ['Views/Global'],
 			console.log '     Value'
 			console.log '-----------------'
 			console.log(optionalValue)
-
+	###
+	
 	router = new app.Router
 
 	Backbone.history.start()

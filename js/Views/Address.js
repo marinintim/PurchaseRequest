@@ -70,22 +70,21 @@
         this.model = new Address;
         this.parentModel = options.parentModel;
         this.collection = new AddressCollection;
+        window.collection = this.collection;
         this.countryCollection = new CountryCollection;
         this.collection.fetch({
           success: function() {
             if (_this.options.samePossible) {
-              _this.model = void 0;
+              _this.listenTo(_this.parentModel.get('address'), "change", function() {
+                return _this.model.set(_this.parentModel.get('address').toJSON());
+              });
             } else {
-              _this.model = _this.collection.first();
+              _this.model.set(_this.collection.first().toJSON());
             }
             _this.updateToSelected();
           }
         });
-        this.countryCollection.fetch({
-          success: function() {
-            return _this.updateRegions;
-          }
-        });
+        this.countryCollection.fetch();
       },
       template: Handlebars.compile($("#pr-address").html()),
       templateForm: Handlebars.compile($("#pr-address-form").html()),

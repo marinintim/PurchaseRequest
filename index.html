@@ -206,6 +206,7 @@
             <select class="pr-address-select">
                  
                      {{#if samePossible}}<option value="same">-- Same as shipping address -- </option>{{/if}}
+                     {{debug addresses}}
                      {{#each addresses}}
                          <option value="{{id}}">{{address}}, {{locality}}</option>
                      {{/each}}

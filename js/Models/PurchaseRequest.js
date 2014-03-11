@@ -47,12 +47,6 @@
           return billingInvalid;
         }
       }
-      /*Simple debug for Backbone.sync
-      		sync: (method, model) ->
-      			console.log('sync in action')
-      			console.log(JSON.stringify(model))
-      */
-
     });
   });
 

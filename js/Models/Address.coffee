@@ -14,14 +14,3 @@ define "Models/Address",
 			return "locality is empty" unless !!attributes?.locality
 			return "country is not chosen" unless !!attributes?.country
 			return "region is not chosen" unless !!attributes?.region
-		###
-		toJSON: ->
-			console.log this
-			return {
-				address: this.get('address')
-				address2: this.get('address2')
-				locality: this.get('locality')
-				country: this.get('country') #Country.attributes.country
-				region: this.get('region')
-			}
-		###

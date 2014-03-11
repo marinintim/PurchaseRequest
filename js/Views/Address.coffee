@@ -56,21 +56,21 @@ define "Views/Address",
 
 			this.parentModel = options.parentModel
 			this.collection = new AddressCollection
-			
+			window.collection = this.collection
 
 			this.countryCollection = new CountryCollection
 			
 
 			this.collection.fetch success: =>
 				if this.options.samePossible
-					this.model = undefined
+					this.listenTo this.parentModel.get('address'), "change", =>
+						this.model.set this.parentModel.get('address').toJSON()
 				else
-					this.model = this.collection.first()
+					this.model.set this.collection.first().toJSON()
 				this.updateToSelected()
 				return
 
-			this.countryCollection.fetch success: =>
-				this.updateRegions
+			this.countryCollection.fetch()
 
 			return
 

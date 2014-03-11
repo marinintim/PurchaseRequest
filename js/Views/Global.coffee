@@ -13,14 +13,9 @@ define "Views/Global",
 			return
 		send: ->
 			this.errorView?.unrender()
-			console.log this.model.toJSON()
 			this.model.save({},{success:this.redirect,error:this.error})
-			#Backbone.sync("create",this.model,{success:this.redirect,error:this.error})
 
 		error: (model,response)->
-			console.log "houston, we've got problem"
-			console.log response
-			console.log model
 			if model.validationError? then error = response
 			if response.responseJSON?.error? then error = response.responseJSON.error 
 			if response.status? and response.status == 500 then $('.pr-send').attr('disabled','disabled')
@@ -29,8 +24,7 @@ define "Views/Global",
 			return
 
 		redirect: (response) ->
-
-			#window.location.replace(response.redirect_url.toString()) 
+			window.location.replace(response.redirect_url.toString()) 
 			return
 
 		render: ->

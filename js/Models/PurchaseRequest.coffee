@@ -33,9 +33,3 @@ define "Models/PurchaseRequest",
 			return cardInvalid if cardInvalid
 			return shippingInvalid if shippingInvalid
 			return billingInvalid if billingInvalid
-
-		###Simple debug for Backbone.sync
-		sync: (method, model) ->
-			console.log('sync in action')
-			console.log(JSON.stringify(model))
-		###

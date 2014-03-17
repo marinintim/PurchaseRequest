@@ -8,30 +8,30 @@ define "Views/CreditCard",
 			"keyup": "updateModel"
 
 		updateToSelected: ->
-			newModel = this.collection.get($(".pr-creditcard select :selected").val())
-			this.model.set newModel.toJSON() if newModel?
-			this.parentModel.trigger "change"
-			this.render()
+			newModel = @collection.get($(".pr-creditcard select :selected").val())
+			@model.set newModel.toJSON() if newModel?
+			@parentModel.trigger "change"
+			@render()
 
 
 		updateModel:  ->
-			this.model.set
-				card_holder: this.$el.find('.pr-creditcard-form-cardholder').val()
-				expiration_month: this.$el.find('.pr-creditcard-form-expire').val()
-				expiration_year: this.$el.find('.pr-creditcard-form-expire-year').val()
-				number: this.$el.find('.pr-creditcard-form-number').val()
-			this.parentModel.trigger "change"
+			@model.set
+				card_holder: @$el.find('.pr-creditcard-form-cardholder').val()
+				expiration_month: @$el.find('.pr-creditcard-form-expire').val()
+				expiration_year: @$el.find('.pr-creditcard-form-expire-year').val()
+				number: @$el.find('.pr-creditcard-form-number').val()
+			@parentModel.trigger "change"
 
 		initialize: (options) ->
 			options ?= {}
 
-			this.parentModel = options.parentModel
-			this.model = this.parentModel.get("credit_card")
+			@parentModel = options.parentModel
+			@model = @parentModel.get("credit_card")
 
-			this.collection = new CreditCardCollection
-			this.collection.fetch success: =>
-				this.model.set this.collection.first().toJSON()
-				this.updateToSelected()
+			@collection = new CreditCardCollection
+			@collection.fetch success: =>
+				@model.set @collection.first().toJSON()
+				@updateToSelected()
 			return 
 
 
@@ -41,11 +41,11 @@ define "Views/CreditCard",
 		render: ->
 			# save selection
 			selected = $(".pr-creditcard select :selected").val()
-			this.$el.html this.template
-				cards: this.collection.toJSON()
+			@$el.html @template
+				cards: @collection.toJSON()
 
 			if selected == "new"
-				this.$el.append(this.templateForm())
+				@$el.append(@templateForm())
 
 			#restore selection
 			$(".pr-creditcard select [value=#{selected}]").attr("selected","selected")

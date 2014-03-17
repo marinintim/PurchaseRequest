@@ -6,7 +6,7 @@ define "Views/Error",
 
 		template: Handlebars.compile $("#pr-error").html()
 		render: (error) ->
-			this.$el.html this.template error: error
+			@$el.html @template error: error
 		unrender: ->
-			this.$el.html ""
+			@$el.html ""
 	}

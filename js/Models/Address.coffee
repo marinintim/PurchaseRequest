@@ -9,8 +9,8 @@ define "Models/Address",
 			country: ""
 			region: ""
 		validate: (attributes) ->
-			attributes ?= this.attributes
-			return "address is empty" unless attributes?.address
-			return "locality is empty" unless !!attributes?.locality
-			return "country is not chosen" unless !!attributes?.country
-			return "region is not chosen" unless !!attributes?.region
+			attributes ?= @attributes
+			return "Address is empty" if _.isEmpty attributes?.address
+			return "Locality is empty" if _.isEmpty attributes?.locality
+			return "Country is not chosen" if _.isEmpty attributes?.country
+			return "Region is not chosen" if _.isEmpty attributes?.region

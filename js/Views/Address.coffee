@@ -10,64 +10,62 @@ define "Views/Address",
 		
 
 		updateToSelected: ->
-			selected = this.$el.find(".pr-address-select :selected").val()
+			selected = @$el.find(".pr-address-select :selected").val()
 			if selected == "same"
-				newModel = this.parentModel.get('address')
+				newModel = @parentModel.get('address')
 			else 
-				newModel = this.collection.get(selected)
+				newModel = @collection.get(selected)
 			
-			this.model.set(newModel.toJSON()) if newModel?
-			this.parentModel.trigger "change"
-			this.render()
+			@model.set(newModel.toJSON()) if newModel?
+			@parentModel.trigger "change"
+			@render()
 
 		updateModel:  ->
-			this.model.set
+			for param in ['address','address2','locality','country','region']
+				@model.set param, @.$el.find(".pr-address-#{param}").val()
+
+			@model.set
 				id: "" 
-				address: this.$el.find('.pr-address-address').val()
-				address2: this.$el.find('.pr-address-address2').val()
-				locality: this.$el.find('.pr-address-locality').val()
-				country: this.$el.find('.pr-address-country').val()
-				region: this.$el.find('.pr-address-region').val()
-			this.parentModel.trigger "change"
+
+			@parentModel.trigger "change"
 
 		updateRegions: ->
-			newCountry = this.$el.find('.pr-address-country :selected').val()
-			newCountry ?= this.model.get('country')
-			this.model.set('country',newCountry) if newCountry != undefined
+			newCountry = @$el.find('.pr-address-country :selected').val()
+			newCountry ?= @model.get('country')
+			@model.set('country',newCountry) if newCountry != undefined
 
-			regions = this.countryCollection.findWhere(code: newCountry).regions.toJSON()
-			
-			this.$el.find('.pr-address-region').html this.templateOptions {options: regions}
-			this.updateModel()
-			return regions
-
-		
+			countryModel = @countryCollection.findWhere(code: newCountry)?.regions
+			countryModel.fetch success: =>
+				regions = @countryCollection.findWhere(code: newCountry).regions.toJSON()
+				@$el.find('.pr-address-region').html @templateOptions {options: regions}
+				console.log "success callback was called"
+				@updateModel()
+			return
 
 		initialize: (options) ->
 			options ?= {}
-			this.options = options
-			this.options.samePossible ?= false
+			@options = options
+			@options.samePossible ?= false
 
-			this.parentModel = options.parentModel
-			this.model = this.parentModel.get "#{if this.options.samePossible then "billing_" else ""}address"
+			@parentModel = options.parentModel
+			@model = @parentModel.get "#{if @options.samePossible then "billing_" else ""}address"
 
-			this.collection = new AddressCollection
-			window.collection = this.collection
+			@collection = new AddressCollection
 
-			this.countryCollection = new CountryCollection
+			@countryCollection = new CountryCollection
 			
 
-			this.collection.fetch success: =>
-				if this.options.samePossible
-					this.listenTo this.parentModel.get('address'), "change", =>
-						this.model.set this.parentModel.get('address').toJSON()
+			@collection.fetch success: =>
+				if @options.samePossible
+					@listenTo @parentModel.get('address'), "change", =>
+						@model.set @parentModel.get('address').toJSON()
 				else
-					newModel = this.collection.first()
-					this.model.set newModel.toJSON()
-				this.updateToSelected()
+					newModel = @collection.first()
+					@model.set newModel.toJSON()
+				@updateToSelected()
 				return
 
-			this.countryCollection.fetch()
+			@countryCollection.fetch success: _.bind(@updateRegions,this)
 
 			return
 
@@ -77,13 +75,13 @@ define "Views/Address",
 		
 
 		render: ->
-			selected = this.$el.find(".pr-address-select :selected").val()
-			this.$el.html this.template addresses: this.collection.toJSON(), samePossible: this.options.samePossible
+			selected = @$el.find(".pr-address-select :selected").val()
+			@$el.html @template addresses: @collection.toJSON(), samePossible: @options.samePossible
 
 			if selected == "new"
-				this.$el.append this.templateForm countries: this.countryCollection.toJSON()
-				this.updateRegions()
-			this.$el.find(".pr-address-select [value=#{selected}]").attr("selected","selected")
+				@$el.append @templateForm countries: @countryCollection.toJSON()
+				@updateRegions()
+			@$el.find(".pr-address-select [value=#{selected}]").attr("selected","selected")
 			return
 
 	}

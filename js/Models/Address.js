@@ -15,17 +15,17 @@
         if (attributes == null) {
           attributes = this.attributes;
         }
-        if (!(attributes != null ? attributes.address : void 0)) {
-          return "address is empty";
+        if (_.isEmpty(attributes != null ? attributes.address : void 0)) {
+          return "Address is empty";
         }
-        if (!(attributes != null ? attributes.locality : void 0)) {
-          return "locality is empty";
+        if (_.isEmpty(attributes != null ? attributes.locality : void 0)) {
+          return "Locality is empty";
         }
-        if (!(attributes != null ? attributes.country : void 0)) {
-          return "country is not chosen";
+        if (_.isEmpty(attributes != null ? attributes.country : void 0)) {
+          return "Country is not chosen";
         }
-        if (!(attributes != null ? attributes.region : void 0)) {
-          return "region is not chosen";
+        if (_.isEmpty(attributes != null ? attributes.region : void 0)) {
+          return "Region is not chosen";
         }
       }
     });

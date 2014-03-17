@@ -1,7 +1,6 @@
 define "Collections/Country",
-["Models/Country","Config"],
-(Country,Config) ->
+["Models/Country"],
+(Country) ->
 	CountryCollection = Backbone.Collection.extend
 		model: Country
-		url: ->
-			Config.baseURL + "/countries"
+		url: "/countries"

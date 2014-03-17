@@ -1,8 +1,7 @@
 define "Collections/CreditCard",
-["Models/CreditCard","Config"],
-(CreditCard, Config) ->
+["Models/CreditCard"],
+(CreditCard) ->
 	CreditCardCollection = Backbone.Collection.extend
-		url: ->
-			Config.baseURL + "/credit_cards"
+		url: "/credit_cards"
 		model: CreditCard
 

@@ -9,8 +9,7 @@
         "change model": "render"
       },
       initialize: function() {
-        this.listenTo(this.model, "change", this.render);
-        return this.render();
+        return this.listenTo(this.model, "change", this.render);
       },
       template: Handlebars.compile($("#pr-summary").html()),
       render: function() {

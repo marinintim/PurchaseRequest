@@ -25,18 +25,20 @@
         return this.render();
       },
       updateModel: function() {
+        var param, _i, _len, _ref;
+        _ref = ['address', 'address2', 'locality', 'country', 'region'];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          param = _ref[_i];
+          this.model.set(param, this.$el.find(".pr-address-" + param).val());
+        }
         this.model.set({
-          id: "",
-          address: this.$el.find('.pr-address-address').val(),
-          address2: this.$el.find('.pr-address-address2').val(),
-          locality: this.$el.find('.pr-address-locality').val(),
-          country: this.$el.find('.pr-address-country').val(),
-          region: this.$el.find('.pr-address-region').val()
+          id: ""
         });
         return this.parentModel.trigger("change");
       },
       updateRegions: function() {
-        var newCountry, regions;
+        var countryModel, newCountry, _ref,
+          _this = this;
         newCountry = this.$el.find('.pr-address-country :selected').val();
         if (newCountry == null) {
           newCountry = this.model.get('country');
@@ -44,14 +46,22 @@
         if (newCountry !== void 0) {
           this.model.set('country', newCountry);
         }
-        regions = this.countryCollection.findWhere({
+        countryModel = (_ref = this.countryCollection.findWhere({
           code: newCountry
-        }).regions.toJSON();
-        this.$el.find('.pr-address-region').html(this.templateOptions({
-          options: regions
-        }));
-        this.updateModel();
-        return regions;
+        })) != null ? _ref.regions : void 0;
+        countryModel.fetch({
+          success: function() {
+            var regions;
+            regions = _this.countryCollection.findWhere({
+              code: newCountry
+            }).regions.toJSON();
+            _this.$el.find('.pr-address-region').html(_this.templateOptions({
+              options: regions
+            }));
+            console.log("success callback was called");
+            return _this.updateModel();
+          }
+        });
       },
       initialize: function(options) {
         var _base, _ref,
@@ -66,7 +76,6 @@
         this.parentModel = options.parentModel;
         this.model = this.parentModel.get("" + (this.options.samePossible ? "billing_" : "") + "address");
         this.collection = new AddressCollection;
-        window.collection = this.collection;
         this.countryCollection = new CountryCollection;
         this.collection.fetch({
           success: function() {
@@ -82,7 +91,9 @@
             _this.updateToSelected();
           }
         });
-        this.countryCollection.fetch();
+        this.countryCollection.fetch({
+          success: _.bind(this.updateRegions, this)
+        });
       },
       template: Handlebars.compile($("#pr-address").html()),
       templateForm: Handlebars.compile($("#pr-address-form").html()),

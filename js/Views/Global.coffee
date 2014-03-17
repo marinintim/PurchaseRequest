@@ -5,23 +5,23 @@ define "Views/Global",
 		events:
 			"click .pr-send": "send"
 		initialize: ->
-			this.model = new PurchaseRequest
-			this.formView = new FormView model: this.model
-			this.summaryView = new SummaryView model: this.model
-			this.errorView = new ErrorView model: this.model
-			this.listenTo this.model, "invalid", this.error
+			@model = new PurchaseRequest
+			@formView = new FormView model: @model
+			@summaryView = new SummaryView model: @model
+			@errorView = new ErrorView model: @model
+			@listenTo @model, "invalid", @error
 			return
 
 		send: ->
-			this.errorView.unrender()
-			this.model.save({},{success:this.redirect,error:this.error})
+			@errorView.unrender()
+			@model.save({},{success:@redirect,error:@error})
 
 		error: (model,response)->
 			if model.validationError? then error = response
 			if response.responseJSON?.error? then error = response.responseJSON.error 
 
 			if response.status? and response.status == 500 then $('.pr-send').attr('disabled','disabled')
-			this.errorView.render(error)
+			@errorView.render(error)
 			return
 
 		redirect: (model,response) ->
@@ -29,7 +29,7 @@ define "Views/Global",
 			return
 
 		render: ->
-			this.formView.render()
-			this.summaryView.render()
+			@formView.render()
+			@summaryView.render()
 			return
 	}

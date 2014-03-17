@@ -1,6 +1,5 @@
 define "Models/Country",
-["Config"],
-(Config) -> 
+-> 
 	Region = Backbone.Model.extend
 		attributes:
 			code: ""
@@ -9,21 +8,25 @@ define "Models/Country",
 	RegionCollection = Backbone.Collection.extend
 		model: Region
 		url: ->
-			Config.baseURL + "/countries/" + this.countryCode + "/regions"
+			"/countries/" + @countryCode + "/regions"
 		initialize: (options) ->
-			this.countryCode = options.code
-		fetch: ->
-			if localStorage["regions_#{this.countryCode}"]?
-				this.reset JSON.parse localStorage["regions_#{this.countryCode}"]	
+			@countryCode = options.code
+		fetch: (options) ->
+			options.success ?= ->
+				return
+			if localStorage["regions_#{@countryCode}"]?
+				@reset JSON.parse localStorage["regions_#{@countryCode}"]
+				options.success()
 			else
-				this.sync "read",this, success: (res) =>
-					localStorage["regions_#{this.countryCode}"] = JSON.stringify res
-					this.reset(res)
+				@sync "read",this, success: (res) =>
+					localStorage["regions_#{@countryCode}"] = JSON.stringify res
+					@reset(res)
+					options.success()
 
 	Country = Backbone.Model.extend
 		attributes:
 			code: ""
 			country: ""
 		initialize: (options) ->
-			this.regions = new RegionCollection code: this.attributes.code
-			this.regions.fetch()
+			@regions = new RegionCollection code: @attributes.code
+			#@regions.fetch()

@@ -6,11 +6,10 @@ define "Views/Summary",
 		events:
 			"change model": "render"
 		initialize: ->
-			this.listenTo this.model, "change", this.render
-			this.render()
+			@listenTo @model, "change", @render
 			
 
 		template: Handlebars.compile $("#pr-summary").html()
 		render: ->
-			this.$el.html this.template this.model.toJSON()
+			@$el.html @template @model.toJSON()
 	}

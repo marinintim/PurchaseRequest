@@ -17,6 +17,18 @@ define "Models/PurchaseRequest",
 				address: @get('address')?.toJSON()
 				billing_address: @get('billing_address')?.toJSON() || @get('address')?.toJSON()
 			}
+
+		save: (attrs, options) ->
+			attrs = {}
+			for attr in ["address","credit_card","billing_address"]
+				if @get(attr).isNew()
+					attrs[attr] = @get(attr)
+				else
+					attrs[attr + "_id"] = @get(attr).id
+					@unset(attr)
+			options.attrs = attrs;
+			Backbone.Model.prototype.save.call(this,attrs,options)
+			
 		validate: ->
 			cardInvalid = @get('credit_card')?.validate()
 			shippingInvalid = @get('address')?.validate()

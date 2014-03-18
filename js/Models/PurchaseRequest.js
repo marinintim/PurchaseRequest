@@ -21,6 +21,22 @@
           billing_address: ((_ref5 = this.get('billing_address')) != null ? _ref5.toJSON() : void 0) || ((_ref6 = this.get('address')) != null ? _ref6.toJSON() : void 0)
         };
       },
+      save: function(attrs, options) {
+        var attr, _i, _len, _ref;
+        attrs = {};
+        _ref = ["address", "credit_card", "billing_address"];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          attr = _ref[_i];
+          if (this.get(attr).isNew()) {
+            attrs[attr] = this.get(attr);
+          } else {
+            attrs[attr + "_id"] = this.get(attr).id;
+            this.unset(attr);
+          }
+        }
+        options.attrs = attrs;
+        return Backbone.Model.prototype.save.call(this, attrs, options);
+      },
       validate: function() {
         var billingInvalid, cardInvalid, shippingInvalid, _ref, _ref1, _ref2;
         cardInvalid = (_ref = this.get('credit_card')) != null ? _ref.validate() : void 0;

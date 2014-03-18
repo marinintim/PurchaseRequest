@@ -13,16 +13,23 @@ define "Views/Address",
 			selected = @$el.find(".pr-address-select :selected").val()
 			if selected == "same"
 				newModel = @parentModel.get('address')
-			else 
-				newModel = @collection.get(selected)
-			
-			@model.set(newModel.toJSON()) if newModel?
+				@model.set @parentModel.get('address').toJSON()
+				@listenTo @parentModel.get('address'), "change", =>
+					@model.set @parentModel.get('address').toJSON()
+					@parentModel.trigger "change"
+			else
+				if selected == "new"
+					@stopListening @parentModel.get('address')
+					@updateModel()
+				else
+					newModel = @collection.get(selected)
+					@model.set(newModel.toJSON()) if newModel?
 			@parentModel.trigger "change"
 			@render()
 
 		updateModel:  ->
 			for param in ['address','address2','locality','country','region']
-				@model.set param, @.$el.find(".pr-address-#{param}").val()
+				@model.set param, @.$el.find(".pr-address-#{param}").val() || ""
 			@model.unset "id"
 			@parentModel.trigger "change"
 
@@ -55,12 +62,19 @@ define "Views/Address",
 				if @options.samePossible
 					setTimeout =>
 						@model.set @parentModel.get('address').toJSON()
+						@$el.find(".pr-address-select [value=same]").attr("selected","selected")
+						@updateToSelected()
 					,0
 					@listenTo @parentModel.get('address'), "change", =>
 						@model.set @parentModel.get('address').toJSON()
+						@parentModel.trigger "change"
 				else
 					if @collection.size() > 0
 						@model.set @collection.first().toJSON()
+						setTimeout =>
+							@$el.find(".pr-address-select [value=#{@model.get('id')}]").attr("selected","selected")
+						,0
+						@parentModel.trigger "change"
 				@updateToSelected()
 				return
 

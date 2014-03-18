@@ -18,8 +18,8 @@
           newModel = this.collection.get(selected);
           if (newModel != null) {
             this.model.set(newModel.toJSON());
+            this.parentModel.trigger("change");
           }
-          this.parentModel.trigger("change");
         }
         return this.render();
       },
@@ -45,6 +45,9 @@
           success: function() {
             if (_this.collection.size() > 0) {
               _this.model.set(_this.collection.first().toJSON());
+              setTimeout(function() {
+                return _this.$el.find(".pr-creditcard-select [value=" + _this.model.id + "]").attr("selected", "selected");
+              }, 0);
             }
             return _this.updateToSelected();
           }
@@ -54,7 +57,7 @@
       templateForm: Handlebars.compile($("#pr-creditcard-form").html()),
       render: function() {
         var selected;
-        selected = $(".pr-creditcard select :selected").val();
+        selected = this.$el.find(".pr-creditcard-select").val();
         this.$el.html(this.template({
           cards: this.collection.toJSON()
         }));

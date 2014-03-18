@@ -11,15 +11,26 @@
         "keyup": "updateModel"
       },
       updateToSelected: function() {
-        var newModel, selected;
+        var newModel, selected,
+          _this = this;
         selected = this.$el.find(".pr-address-select :selected").val();
         if (selected === "same") {
           newModel = this.parentModel.get('address');
+          this.model.set(this.parentModel.get('address').toJSON());
+          this.listenTo(this.parentModel.get('address'), "change", function() {
+            _this.model.set(_this.parentModel.get('address').toJSON());
+            return _this.parentModel.trigger("change");
+          });
         } else {
-          newModel = this.collection.get(selected);
-        }
-        if (newModel != null) {
-          this.model.set(newModel.toJSON());
+          if (selected === "new") {
+            this.stopListening(this.parentModel.get('address'));
+            this.updateModel();
+          } else {
+            newModel = this.collection.get(selected);
+            if (newModel != null) {
+              this.model.set(newModel.toJSON());
+            }
+          }
         }
         this.parentModel.trigger("change");
         return this.render();
@@ -29,7 +40,7 @@
         _ref = ['address', 'address2', 'locality', 'country', 'region'];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           param = _ref[_i];
-          this.model.set(param, this.$el.find(".pr-address-" + param).val());
+          this.model.set(param, this.$el.find(".pr-address-" + param).val() || "");
         }
         this.model.unset("id");
         return this.parentModel.trigger("change");
@@ -76,14 +87,21 @@
           success: function() {
             if (_this.options.samePossible) {
               setTimeout(function() {
-                return _this.model.set(_this.parentModel.get('address').toJSON());
+                _this.model.set(_this.parentModel.get('address').toJSON());
+                _this.$el.find(".pr-address-select [value=same]").attr("selected", "selected");
+                return _this.updateToSelected();
               }, 0);
               _this.listenTo(_this.parentModel.get('address'), "change", function() {
-                return _this.model.set(_this.parentModel.get('address').toJSON());
+                _this.model.set(_this.parentModel.get('address').toJSON());
+                return _this.parentModel.trigger("change");
               });
             } else {
               if (_this.collection.size() > 0) {
                 _this.model.set(_this.collection.first().toJSON());
+                setTimeout(function() {
+                  return _this.$el.find(".pr-address-select [value=" + (_this.model.get('id')) + "]").attr("selected", "selected");
+                }, 0);
+                _this.parentModel.trigger("change");
               }
             }
             _this.updateToSelected();

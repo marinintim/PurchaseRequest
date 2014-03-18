@@ -110,12 +110,13 @@
 
     <script type="text/x-handlebars-template" id="pr-creditcard">
         <select class="pr-creditcard-select">
+            <option value="new">-- Add new credit card --</option>
             {{#if cards}}
                 {{#each cards}}
                     <option value="{{id}}">{{card_holder}}, {{number}}</option>
                 {{/each}}
             {{/if}}
-            <option value="new">-- Add new credit card --</option>
+           
         </select>
     </script>
 
@@ -137,13 +138,13 @@
 
      <script type="text/x-handlebars-template" id="pr-address">
             <select class="pr-address-select">
+                {{#if samePossible}}<option value="same">-- Same as shipping address -- </option>{{/if}}
+                <option value="new">-- Add new address --</option>    
+                {{#each addresses}}
+                    <option value="{{id}}">{{address}}, {{locality}}</option>
+                {{/each}}
                  
-                     {{#if samePossible}}<option value="same">-- Same as shipping address -- </option>{{/if}}
-                     {{#each addresses}}
-                         <option value="{{id}}">{{address}}, {{locality}}</option>
-                     {{/each}}
                  
-                 <option value="new">-- Add new address --</option>
             </select>
      </script>
 

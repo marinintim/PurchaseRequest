@@ -13,8 +13,9 @@ define "Views/CreditCard",
     		@updateModel()
     	else
 	      newModel = @collection.get(selected)
-	      @model.set newModel.toJSON() if newModel?
-	      @parentModel.trigger "change"
+	      if newModel?
+	     	  @model.set newModel.toJSON() 
+	        @parentModel.trigger "change"
 	    @render()
 
 
@@ -37,6 +38,9 @@ define "Views/CreditCard",
       @collection.fetch success: =>
         if @collection.size() > 0
           @model.set @collection.first().toJSON()
+          setTimeout =>
+          	@$el.find(".pr-creditcard-select [value=#{@model.id}]").attr("selected","selected")
+          ,0
         @updateToSelected()
       return 
 
@@ -46,7 +50,7 @@ define "Views/CreditCard",
 
     render: ->
       # save selection
-      selected = $(".pr-creditcard select :selected").val()
+      selected = @$el.find(".pr-creditcard-select").val()
       @$el.html @template
         cards: @collection.toJSON()
 

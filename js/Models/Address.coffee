@@ -10,7 +10,8 @@ define "Models/Address",
 			region: ""
 		validate: (attributes) ->
 			attributes ?= @attributes
-			return "Address is empty" if _.isEmpty attributes?.address
-			return "Locality is empty" if _.isEmpty attributes?.locality
-			return "Country is not chosen" if _.isEmpty attributes?.country
-			return "Region is not chosen" if _.isEmpty attributes?.region
+			returnMessage = ""
+			for name, value of attributes
+				if _.isEmpty(value) and name != 'address2'
+					returnMessage += "#{name[0].toUpperCase() + name.slice(1)} is empty. "
+			if returnMessage.length > 0 then return "address is incomplete: #{returnMessage}"

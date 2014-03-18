@@ -12,20 +12,19 @@
         region: ""
       },
       validate: function(attributes) {
+        var name, returnMessage, value;
         if (attributes == null) {
           attributes = this.attributes;
         }
-        if (_.isEmpty(attributes != null ? attributes.address : void 0)) {
-          return "Address is empty";
+        returnMessage = "";
+        for (name in attributes) {
+          value = attributes[name];
+          if (_.isEmpty(value) && name !== 'address2') {
+            returnMessage += "" + (name[0].toUpperCase() + name.slice(1)) + " is empty. ";
+          }
         }
-        if (_.isEmpty(attributes != null ? attributes.locality : void 0)) {
-          return "Locality is empty";
-        }
-        if (_.isEmpty(attributes != null ? attributes.country : void 0)) {
-          return "Country is not chosen";
-        }
-        if (_.isEmpty(attributes != null ? attributes.region : void 0)) {
-          return "Region is not chosen";
+        if (returnMessage.length > 0) {
+          return "address is incomplete: " + returnMessage;
         }
       }
     });

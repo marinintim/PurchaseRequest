@@ -11,22 +11,22 @@
         expiration_year: ""
       },
       validate: function(attributes) {
-        var expire_date, today_date;
+        var beautiful_name, expire_date, name, returnMessage, today_date, value;
         if (attributes == null) {
           attributes = this.attributes;
         }
         if (this.isNew()) {
-          if (_.isEmpty(attributes)) {
-            return "Credit card fields are not filled";
+          returnMessage = "";
+          for (name in object) {
+            value = object[name];
+            if (_.isEmpty(value)) {
+              beautiful_name = name.replace("_", "");
+              beautiful_name = beautiful_name[0].toUpperCase() + beautiful_name.slice(1);
+              returnMessage += "" + beatiful_name + " is empty. ";
+            }
           }
-          if (_.isEmpty(attributes.number)) {
-            return "Credit card: card number is empty";
-          }
-          if (_.isEmpty(attributes.card_holder)) {
-            return "Credit card: cardholder is empty";
-          }
-          if (_.isEmpty(attributes.expiration_month || _.isEmpty(attributes.expiration_year))) {
-            return "Credit card: expiration date is incomplete";
+          if (returnMessage.length > 0) {
+            return "credit card is incomplete: " + returnMessage;
           }
           if (!/^[0-9]+$/.test(attributes.number.replace(/[\s-\\\/]+/g, ""))) {
             return "Credit card: invalid number";
@@ -43,7 +43,6 @@
           expire_date.setMonth + parseInt(attributes.expiration_month, 10);
           today_date = new Date();
           window.expire = expire_date;
-          console.log(expire_date - today_date);
           if (expire_date - today_date <= 0) {
             return "Credit card is already expired";
           }

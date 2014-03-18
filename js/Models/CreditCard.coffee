@@ -11,11 +11,14 @@ define "Models/CreditCard",
 		validate: (attributes) ->
 			attributes ?= @attributes
 			if this.isNew()
-				return "Credit card fields are not filled" if _.isEmpty attributes
-				return "Credit card: card number is empty" if _.isEmpty attributes.number
-				return "Credit card: cardholder is empty" if _.isEmpty attributes.card_holder
-				return "Credit card: expiration date is incomplete" if _.isEmpty attributes.expiration_month or _.isEmpty attributes.expiration_year
-
+				returnMessage = ""
+				for name, value of object
+					if _.isEmpty value
+						beautiful_name = name.replace("_","")
+						beautiful_name = beautiful_name[0].toUpperCase() + beautiful_name.slice(1)
+						returnMessage += "#{beatiful_name} is empty. "
+				if returnMessage.length > 0 then return "credit card is incomplete: #{returnMessage}"
+				
 				return "Credit card: invalid number" unless /^[0-9]+$/.test attributes.number.replace /[\s-\\\/]+/g, ""
 				return "Credit card: invalid expiration month" unless $.isNumeric attributes.expiration_month
 				return "Credit card: invalid expiration year" unless $.isNumeric attributes.expiration_year
@@ -27,7 +30,6 @@ define "Models/CreditCard",
 				
 				today_date = new Date()
 				window.expire = expire_date
-				console.log expire_date - today_date
 				return "Credit card is already expired" if expire_date - today_date <= 0
 
 	return CreditCard

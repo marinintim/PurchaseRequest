@@ -32,6 +32,7 @@ body {
             padding-left: 1em;
             vertical-align: middle;
             background: #8EB4D9;
+            margin-top: 1em;
         }
 
             .pr-send {
@@ -49,7 +50,6 @@ body {
             width: 70%;
             vertical-align: top;
             display: inline-block;
-            margin-left: 1em;
         }
             
             .pr-form select, .pr-form input {

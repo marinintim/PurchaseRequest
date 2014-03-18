@@ -10,12 +10,17 @@
         "keyup": "updateModel"
       },
       updateToSelected: function() {
-        var newModel;
-        newModel = this.collection.get($(".pr-creditcard select :selected").val());
-        if (newModel != null) {
-          this.model.set(newModel.toJSON());
+        var newModel, selected;
+        selected = $(".pr-creditcard select :selected").val();
+        if (selected === "new") {
+          this.updateModel();
+        } else {
+          newModel = this.collection.get(selected);
+          if (newModel != null) {
+            this.model.set(newModel.toJSON());
+          }
+          this.parentModel.trigger("change");
         }
-        this.parentModel.trigger("change");
         return this.render();
       },
       updateModel: function() {
@@ -25,6 +30,7 @@
           expiration_year: this.$el.find('.pr-creditcard-form-expire-year').val(),
           number: this.$el.find('.pr-creditcard-form-number').val()
         });
+        this.model.unset("id");
         return this.parentModel.trigger("change");
       },
       initialize: function(options) {
@@ -37,7 +43,9 @@
         this.collection = new CreditCardCollection;
         this.collection.fetch({
           success: function() {
-            _this.model.set(_this.collection.first().toJSON());
+            if (_this.collection.size() > 0) {
+              _this.model.set(_this.collection.first().toJSON());
+            }
             return _this.updateToSelected();
           }
         });

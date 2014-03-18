@@ -15,6 +15,14 @@
       }
     });
     router = new app.Router;
+    $.ajax("/regions/state", {
+      success: function(res) {
+        if (res > (localStorage[regionsVersion] || 0)) {
+          localStorage.clear();
+          return localStorage[regionsVersion] = res;
+        }
+      }
+    });
     Backbone.history.start();
   });
 

@@ -14,5 +14,10 @@ return require ['Views/Global'],
 	
 	router = new app.Router
 
+	$.ajax "/regions/state", success: (res) ->
+		if res > (localStorage[regionsVersion] or 0) 
+			localStorage.clear()
+			localStorage[regionsVersion] = res
+
 	Backbone.history.start()
 	return

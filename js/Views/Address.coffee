@@ -23,10 +23,7 @@ define "Views/Address",
 		updateModel:  ->
 			for param in ['address','address2','locality','country','region']
 				@model.set param, @.$el.find(".pr-address-#{param}").val()
-
-			@model.set
-				id: "" 
-
+			@model.unset "id"
 			@parentModel.trigger "change"
 
 		updateRegions: ->
@@ -34,12 +31,11 @@ define "Views/Address",
 			newCountry ?= @model.get('country')
 			@model.set('country',newCountry) if newCountry != undefined
 
-			countryModel = @countryCollection.findWhere(code: newCountry)?.regions
-			countryModel.fetch success: =>
-				regions = @countryCollection.findWhere(code: newCountry).regions.toJSON()
-				@$el.find('.pr-address-region').html @templateOptions {options: regions}
-				console.log "success callback was called"
-				@updateModel()
+			countryModel = @countryCollection.findWhere(code: newCountry)
+			if countryModel?.regions?
+				countryModel.regions.fetch success: =>				
+					@$el.find('.pr-address-region').html @templateOptions options: countryModel.regions.toJSON()
+					@updateModel()
 			return
 
 		initialize: (options) ->
@@ -57,11 +53,14 @@ define "Views/Address",
 
 			@collection.fetch success: =>
 				if @options.samePossible
+					setTimeout =>
+						@model.set @parentModel.get('address').toJSON()
+					,0
 					@listenTo @parentModel.get('address'), "change", =>
 						@model.set @parentModel.get('address').toJSON()
 				else
-					newModel = @collection.first()
-					@model.set newModel.toJSON()
+					if @collection.size() > 0
+						@model.set @collection.first().toJSON()
 				@updateToSelected()
 				return
 

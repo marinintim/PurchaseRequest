@@ -12,6 +12,7 @@ define "Models/Country",
 		initialize: (options) ->
 			@countryCode = options.code
 		fetch: (options) ->
+			options ?= {}
 			options.success ?= ->
 				return
 			if localStorage["regions_#{@countryCode}"]?
@@ -29,4 +30,3 @@ define "Models/Country",
 			country: ""
 		initialize: (options) ->
 			@regions = new RegionCollection code: @attributes.code
-			#@regions.fetch()

@@ -20,6 +20,9 @@
       fetch: function(options) {
         var _ref,
           _this = this;
+        if (options == null) {
+          options = {};
+        }
         if ((_ref = options.success) == null) {
           options.success = function() {};
         }

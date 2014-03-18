@@ -31,13 +31,11 @@
           param = _ref[_i];
           this.model.set(param, this.$el.find(".pr-address-" + param).val());
         }
-        this.model.set({
-          id: ""
-        });
+        this.model.unset("id");
         return this.parentModel.trigger("change");
       },
       updateRegions: function() {
-        var countryModel, newCountry, _ref,
+        var countryModel, newCountry,
           _this = this;
         newCountry = this.$el.find('.pr-address-country :selected').val();
         if (newCountry == null) {
@@ -46,22 +44,19 @@
         if (newCountry !== void 0) {
           this.model.set('country', newCountry);
         }
-        countryModel = (_ref = this.countryCollection.findWhere({
+        countryModel = this.countryCollection.findWhere({
           code: newCountry
-        })) != null ? _ref.regions : void 0;
-        countryModel.fetch({
-          success: function() {
-            var regions;
-            regions = _this.countryCollection.findWhere({
-              code: newCountry
-            }).regions.toJSON();
-            _this.$el.find('.pr-address-region').html(_this.templateOptions({
-              options: regions
-            }));
-            console.log("success callback was called");
-            return _this.updateModel();
-          }
         });
+        if ((countryModel != null ? countryModel.regions : void 0) != null) {
+          countryModel.regions.fetch({
+            success: function() {
+              _this.$el.find('.pr-address-region').html(_this.templateOptions({
+                options: countryModel.regions.toJSON()
+              }));
+              return _this.updateModel();
+            }
+          });
+        }
       },
       initialize: function(options) {
         var _base, _ref,
@@ -79,14 +74,17 @@
         this.countryCollection = new CountryCollection;
         this.collection.fetch({
           success: function() {
-            var newModel;
             if (_this.options.samePossible) {
+              setTimeout(function() {
+                return _this.model.set(_this.parentModel.get('address').toJSON());
+              }, 0);
               _this.listenTo(_this.parentModel.get('address'), "change", function() {
                 return _this.model.set(_this.parentModel.get('address').toJSON());
               });
             } else {
-              newModel = _this.collection.first();
-              _this.model.set(newModel.toJSON());
+              if (_this.collection.size() > 0) {
+                _this.model.set(_this.collection.first().toJSON());
+              }
             }
             _this.updateToSelected();
           }

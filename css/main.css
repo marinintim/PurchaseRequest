@@ -150,3 +150,6 @@ body {
             .pr-summary small {
                 display: block;
             }
+        .pr-error {
+            color: red;
+        }

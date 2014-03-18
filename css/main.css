@@ -140,6 +140,7 @@ body {
                 background: #E6EEF7;
                 padding: 2em;
                 text-align: right;
+                word-wrap: break-word;
             }
 
             .pr-summary em {

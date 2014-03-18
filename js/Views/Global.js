@@ -24,7 +24,7 @@
         this.errorView.unrender();
         return this.model.save({}, {
           success: this.redirect,
-          error: this.error
+          error: _.bind(this.error, this)
         });
       },
       error: function(model, response) {

@@ -14,7 +14,7 @@ define "Views/Global",
 
 		send: ->
 			@errorView.unrender()
-			@model.save({},{success:@redirect,error:@error})
+			@model.save({},{success:@redirect,error:_.bind @error, this})
 
 		error: (model,response)->
 			if model.validationError? then error = response

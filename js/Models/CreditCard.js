@@ -17,16 +17,16 @@
         }
         if (this.isNew()) {
           returnMessage = "";
-          for (name in object) {
-            value = object[name];
+          for (name in attributes) {
+            value = attributes[name];
             if (_.isEmpty(value)) {
-              beautiful_name = name.replace("_", "");
+              beautiful_name = name.replace("_", " ");
               beautiful_name = beautiful_name[0].toUpperCase() + beautiful_name.slice(1);
-              returnMessage += "" + beatiful_name + " is empty. ";
+              returnMessage += "" + beautiful_name + " is empty. ";
             }
           }
           if (returnMessage.length > 0) {
-            return "credit card is incomplete: " + returnMessage;
+            return "Credit card form is incomplete: " + (returnMessage.trim());
           }
           if (!/^[0-9]+$/.test(attributes.number.replace(/[\s-\\\/]+/g, ""))) {
             return "Credit card: invalid number";

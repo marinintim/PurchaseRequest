@@ -12,12 +12,12 @@ define "Models/CreditCard",
 			attributes ?= @attributes
 			if this.isNew()
 				returnMessage = ""
-				for name, value of object
+				for name, value of attributes
 					if _.isEmpty value
-						beautiful_name = name.replace("_","")
+						beautiful_name = name.replace("_"," ")
 						beautiful_name = beautiful_name[0].toUpperCase() + beautiful_name.slice(1)
-						returnMessage += "#{beatiful_name} is empty. "
-				if returnMessage.length > 0 then return "credit card is incomplete: #{returnMessage}"
+						returnMessage += "#{beautiful_name} is empty. "
+				if returnMessage.length > 0 then return "Credit card form is incomplete: #{returnMessage.trim()}"
 				
 				return "Credit card: invalid number" unless /^[0-9]+$/.test attributes.number.replace /[\s-\\\/]+/g, ""
 				return "Credit card: invalid expiration month" unless $.isNumeric attributes.expiration_month

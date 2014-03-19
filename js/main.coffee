@@ -1,4 +1,4 @@
-return require ['Views/Global'],
+require ['Views/Global'],
 (GlobalView) ->
 	app = {
 	}

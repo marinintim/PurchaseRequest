@@ -1,62 +1,42 @@
 define "Views/CreditCard",
-["Models/CreditCard","Collections/CreditCard"],
-(CreditCard, CreditCardCollection) ->
-  CreditCardView = Backbone.View.extend 
-    el: $(".pr-creditcard")
+["Views/Enchanced"],
+(EnchancedView) ->
+  CreditCardView = EnchancedView.extend
     events:
       "change .pr-creditcard-select": "updateToSelected"
       "keyup": "updateModel"
 
-    updateToSelected: ->
-    	selected = $(".pr-creditcard select :selected").val()
-    	if selected == "new"
-    		@updateModel()
-    	else
-	      newModel = @collection.get(selected)
-	      if newModel?
-	     	  @model.set newModel.toJSON() 
-	        @parentModel.trigger "change"
-	    @render()
-
-
-    updateModel:  ->
-      @model.set
-        card_holder: @$el.find('.pr-creditcard-form-cardholder').val()
-        expiration_month: @$el.find('.pr-creditcard-form-expire').val()
-        expiration_year: @$el.find('.pr-creditcard-form-expire-year').val()
-        number: @$el.find('.pr-creditcard-form-number').val()
-      @model.unset "id"
-      @parentModel.trigger "change"
 
     initialize: (options) ->
       options ?= {}
+      @form =
+        'cardholder': 'cardholder'
+        'expiration_month': 'expire'
+        'expiration_year': 'expire-year'
+        'number': 'number'
 
-      @parentModel = options.parentModel
-      @model = @parentModel.get("credit_card")
+      for key of @form
+        @form[key] = '.pr-creditcard-form-' + @form[key]
 
-      @collection = new CreditCardCollection
-      @collection.fetch success: =>
+      @model = options.parentModel?.get("credit_card")
+
+      @collection = app.collections.cards
+      @listenToOnce @collection, "sync", =>
         if @collection.size() > 0
           @model.set @collection.first().toJSON()
-          setTimeout =>
-          	@$el.find(".pr-creditcard-select [value=#{@model.id}]").attr("selected","selected")
-          ,0
-        @updateToSelected()
+          @updateToSelected
+            target:
+              value: @model.id
       return 
 
 
     template: Handlebars.compile $("#pr-creditcard").html()
     templateForm: Handlebars.compile $("#pr-creditcard-form").html()
 
-    render: ->
-      # save selection
-      selected = @$el.find(".pr-creditcard-select").val()
-      @$el.html @template
-        cards: @collection.toJSON()
-
+    render: (selected) ->
+      selected ?= @$(".pr-creditcard-select").val()
+      @$el.html @template cards: @collection.toJSON()
       if selected == "new"
-        @$el.append(@templateForm())
-
-      #restore selection
-      $(".pr-creditcard select [value=#{selected}]").attr("selected","selected")
+        @$el.append @templateForm()
+      @$('.pr-creditcard-select').val(selected)
       return

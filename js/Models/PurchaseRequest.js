@@ -4,52 +4,64 @@
   define("Models/PurchaseRequest", ["Models/Address", "Models/CreditCard"], function(Address, CreditCard) {
     var PurchaseRequest;
     return PurchaseRequest = Backbone.Model.extend({
-      defaults: {
-        credit_card: new CreditCard,
-        address: new Address,
-        billing_address: new Address
+      attributes: {
+        credit_card: CreditCard,
+        address: Address,
+        billing_address: Address
+      },
+      initialize: function(options) {
+        this.set('credit_card', new CreditCard({
+          parent: this
+        }));
+        this.set('address', new Address({
+          parent: this
+        }));
+        return this.set('billing_address', new Address({
+          parent: this
+        }));
       },
       url: "/orders",
       toJSON: function() {
-        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6;
+        var _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
         return {
           credit_card_id: (_ref = this.get('credit_card')) != null ? _ref.get('id') : void 0,
           billing_address_id: (_ref1 = this.get('billingAddress')) != null ? _ref1.get('id') : void 0,
           address_id: (_ref2 = this.get('address')) != null ? _ref2.get('id') : void 0,
           credit_card: (_ref3 = this.get('credit_card')) != null ? _ref3.toJSON() : void 0,
           address: (_ref4 = this.get('address')) != null ? _ref4.toJSON() : void 0,
-          billing_address: ((_ref5 = this.get('billing_address')) != null ? _ref5.toJSON() : void 0) || ((_ref6 = this.get('address')) != null ? _ref6.toJSON() : void 0)
+          billing_address: (_ref5 = this.get('billing_address')) != null ? _ref5.toJSON() : void 0
         };
       },
-      save: function(attrs, options) {
-        var attr, _i, _len, _ref;
+      save: function(options) {
+        var attr, attrs;
         attrs = {};
-        _ref = ["address", "credit_card", "billing_address"];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          attr = _ref[_i];
+        if (options == null) {
+          options = {};
+        }
+        for (attr in this.attributes) {
           if (this.get(attr).isNew()) {
             attrs[attr] = this.get(attr);
           } else {
             attrs[attr + "_id"] = this.get(attr).id;
-            this.unset(attr);
           }
         }
         options.attrs = attrs;
         return Backbone.Model.prototype.save.call(this, attrs, options);
       },
-      validate: function() {
-        var billingInvalid, cardInvalid, shippingInvalid, _ref, _ref1, _ref2;
-        cardInvalid = (_ref = this.get('credit_card')) != null ? _ref.validate() : void 0;
-        shippingInvalid = (_ref1 = this.get('address')) != null ? _ref1.validate() : void 0;
-        billingInvalid = (_ref2 = this.get('billing_address')) != null ? _ref2.validate() : void 0;
-        if (cardInvalid) {
-          return cardInvalid;
+      validate: function(attributes) {
+        var error, name, value;
+        if (attributes == null) {
+          attributes = this.attributes;
         }
-        if (shippingInvalid) {
-          return shippingInvalid;
+        error = "";
+        for (name in attributes) {
+          value = attributes[name];
+          if (typeof value.validate === 'function' && value.validate()) {
+            error += value.validate() + "<br>";
+          }
         }
-        if (billingInvalid) {
-          return billingInvalid;
+        if (error.length > 0) {
+          return error;
         }
       }
     });

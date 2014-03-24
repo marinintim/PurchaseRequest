@@ -1,6 +1,6 @@
 define "Collections/Address",
-["Models/Address","Models/Country","Collections/Country"],
-(Address,Country,CountryCollection) ->
+["Models/Address"],
+(Address) ->
 	AddressCollection = Backbone.Collection.extend
 		url: "/addresses"
 		model: Address

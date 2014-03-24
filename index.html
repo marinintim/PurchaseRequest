@@ -57,7 +57,7 @@
     </body>
     
     <script type="text/x-handlebars-template" id="pr-error">
-        <strong>Error: {{error}}</strong>
+        <strong>Error: {{{error}}}</strong>
     </script>
 
     <script type="text/x-handlebars-template" id="pr-summary">
@@ -115,6 +115,8 @@
                 {{#each cards}}
                     <option value="{{id}}">{{card_holder}}, {{number}}</option>
                 {{/each}}
+            {{else}}
+                <option>server error</option>
             {{/if}}
            
         </select>
@@ -138,13 +140,23 @@
 
      <script type="text/x-handlebars-template" id="pr-address">
             <select class="pr-address-select">
-                {{#if samePossible}}<option value="same">-- Same as shipping address -- </option>{{/if}}
+                <option value="new">-- Add new address --</option>    
+                {{#if addresses}}
+                    {{#each addresses}}
+                        <option value="{{id}}">{{address}}, {{locality}}</option>
+                    {{/each}}
+                {{else}}
+                    <option>server error</option>
+                {{/if}}              
+            </select>
+     </script>
+     <script type="text/x-handlebars-template" id="pr-address-billing">
+            <select class="pr-address-select">
+                <option value="same">-- Same as shipping address -- </option>
                 <option value="new">-- Add new address --</option>    
                 {{#each addresses}}
                     <option value="{{id}}">{{address}}, {{locality}}</option>
-                {{/each}}
-                 
-                 
+                {{/each}}     
             </select>
      </script>
 

@@ -2,12 +2,18 @@ define "Models/PurchaseRequest",
 ["Models/Address","Models/CreditCard"],
 (Address, CreditCard) -> 
 	PurchaseRequest = Backbone.Model.extend
-		defaults:
-			credit_card: new CreditCard
-			address: new Address
-			billing_address: new Address
+		attributes:
+			credit_card: CreditCard
+			address: Address
+			billing_address: Address
+
+		initialize: (options) ->
+			@set 'credit_card', new CreditCard parent: @
+			@set 'address', new Address parent: @
+			@set 'billing_address', new Address parent: @
 
 		url: "/orders"
+
 		toJSON: ->
 			return {
 				credit_card_id: @get('credit_card')?.get('id')
@@ -15,25 +21,25 @@ define "Models/PurchaseRequest",
 				address_id: @get('address')?.get('id')
 				credit_card: @get('credit_card')?.toJSON()
 				address: @get('address')?.toJSON()
-				billing_address: @get('billing_address')?.toJSON() || @get('address')?.toJSON()
+				billing_address: @get('billing_address')?.toJSON()
 			}
 
-		save: (attrs, options) ->
+		save: (options) ->
 			attrs = {}
-			for attr in ["address","credit_card","billing_address"]
+			options ?= {}
+			for attr of @attributes
 				if @get(attr).isNew()
 					attrs[attr] = @get(attr)
 				else
 					attrs[attr + "_id"] = @get(attr).id
-					@unset(attr)
-			options.attrs = attrs;
-			Backbone.Model.prototype.save.call(this,attrs,options)
+					#@unset(attr)
+			options.attrs = attrs
+			Backbone.Model.prototype.save.call(@,attrs,options)
 			
-		validate: ->
-			cardInvalid = @get('credit_card')?.validate()
-			shippingInvalid = @get('address')?.validate()
-			billingInvalid = @get('billing_address')?.validate()
-
-			return cardInvalid if cardInvalid
-			return shippingInvalid if shippingInvalid
-			return billingInvalid if billingInvalid
+		validate: (attributes) ->
+			attributes ?= @attributes
+			error = ""
+			for name, value of attributes
+				if typeof value.validate == 'function' and value.validate()
+					error += value.validate() + "<br>"
+			if error.length > 0 then return error

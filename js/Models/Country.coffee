@@ -19,7 +19,7 @@ define "Models/Country",
 				@reset JSON.parse localStorage["regions_#{@countryCode}"]
 				options.success()
 			else
-				@sync "read",this, success: (res) =>
+				@sync "read", this, success: (res) =>
 					localStorage["regions_#{@countryCode}"] = JSON.stringify res
 					@reset(res)
 					options.success()
